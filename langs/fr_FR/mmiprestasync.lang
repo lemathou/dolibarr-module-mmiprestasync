@@ -1,0 +1,121 @@
+# Copyright (C) 2021 SuperAdmin <contact@iprospective.fr>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+#
+# Générique
+#
+
+# Module label 'ModuleMMIPrestaSyncName'
+ModuleMMIPrestaSyncName = Synchro Prestashop
+# Module description 'ModuleMMIPrestaSyncDesc'
+ModuleMMIPrestaSyncDesc = Synchronisation vers/depuis Prestashop via un middleware
+
+MMIPRESTASYNC_PS_URL = Prestashop URL
+MMIPRESTASYNC_PS_URLTooltip = https://www.myprestashopwebsite.com/
+
+MMIPRESTASYNC_WS_SYNC_URL = Prestashop Webservice Sync URL
+MMIPRESTASYNC_WS_SYNC_PASS = Prestashop Webservice Sync Key/Pass
+MMIPRESTASYNC_WS_SYNC_PASSTooltip = HZUGHUZSDGHZUDGHUIZGDUIZGD
+
+MMIPRESTASYNC_SYNC = Synchronisation active
+MMIPRESTASYNC_SYNCTooltip = 0:NON, 1:OUI
+
+MMIPRESTASYNC_PRODUCT_SYNC = Synchronisation des produits
+MMIPRESTASYNC_PRODUCT_SYNCTooltip = 0:PAS, 1:Doli=>Presta, 2:Presta=>Doli, 3:Doli<=>Presta
+MMIPRESTASYNC_PRODUCT_LOT_SYNC = Synchronisation des lots produit
+MMIPRESTASYNC_LOT_SYNC = Synchronisation des lots produit
+MMIPRESTASYNC_LOT_SYNCTooltip = My param 2 tooltip
+MMIPRESTASYNC_STOCK_SYNC = Synchronisation du stock
+MMIPRESTASYNC_STOCK_SYNCTooltip = None, All, Ids
+MMIPRESTASYNC_ENTREPOT_IDS = Entrepot(s) Dolibarr à synchroniser (IDs)
+MMIPRESTASYNC_ENTREPOT_IDSTooltip = 1,2,5,8
+MMIPRESTASYNC_SUPPLIER_SYNC = Synchronisation Fournisseurs
+MMIPRESTASYNC_SUPPLIER_SYNCTooltip = 0:NON, 1:OUI
+MMIPRESTASYNC_SUPPLIER_PRICE_SYNC = Synchronisation des Prix Fournisseurs
+MMIPRESTASYNC_CUSTOMER_SYNC = Synchronisation Clients
+MMIPRESTASYNC_ADDRESS_SYNC = Synchronisation Afdresses client
+MMIPRESTASYNC_EXPE_SYNC = Synchronisation expéditions
+MMIPRESTASYNC_ORDER_SYNC = Synchronisation Commandes
+MMIPRESTASYNC_ORDER_DETAIL_SYNC = Synchronisation Lignes de commandes
+MMIPRESTASYNC_SHIPPING_SYNC = Synchronisation Expéditions client
+MMIPRESTASYNC_INVOICE_SYNC = Synchronisation Factures et avoirs
+MMIPRESTASYNC_PAYMENT_SYNC = Synchronisation Réglements client
+
+#
+# Page Index
+#
+MMIPrestaSyncArea = Synchronisation Prestashop/Dolibarr
+
+#
+# Page d'administration
+#
+MMIPrestaSyncSetup = Configuration du module MMIPrestaSync
+Settings = Réglages
+MMIPrestaSyncSetupPage = Page de configuration du module MMIPrestaSync
+
+#
+# Page À propos
+#
+About = À propos
+MMIPrestaSyncAbout = À propos de MMIPrestaSync
+MMIPrestaSyncAboutPage = Page à propos de MMIPrestaSync
+
+#
+# Page d'exemple
+#
+MyPageName = Nom de ma page
+
+#
+# Box d'exemple
+#
+MyWidget = Mon widget
+MyWidgetDescription = Description de mon widget
+
+#
+# Champs supplémentaires
+#
+Extrafield_fk_parent_pack = Produit Pack parent
+Extrafield_fk_soc_fournisseur = Fournisseur par défaut (Presta)
+Extrafield_garantie = Garantie
+Extrafield_longdescript = Description longue HTML
+Extrafield_p_active = Actif (Presta)
+Extrafield_p_alias = Alias (Presta)
+Extrafield_p_address2 = Complément d'adresse (Presta)
+Extrafield_p_available_for_order = Dispo à la vente (Presta)
+Extrafield_p_company = Société (Presta)
+Extrafield_p_deleted = Supprimé (Presta)
+Extrafield_p_firstname = Prénom (Presta)
+Extrafield_p_lastname = Nom (Presta)
+Extrafield_p_online_only = Exclu web (Presta)
+Extrafield_p_ref = Réf. (Presta)
+Extrafield_p_state = Statut (Presta)
+Extrafield_p_group = Groupe (Presta)
+ExtrafieldToolTip_p_group = Group principal de client dans Prestashop
+Extrafield_supplier_ref = Réf. Fourn.
+ExtrafieldToolTip_supplier_ref = Référence du Fournisseur par défaut
+Extrafield_sync = Synchroniser (Presta)
+Extrafield_sync_contents = Synchroniser contenu (Presta)
+ExtrafieldToolTip_sync_contents = Cocher pour activier la synchro du contenu, qui pour l'instant ne fonctionne que dans le sens Presta=>Doli (sinon, les commandes seront désolidarisées entre Doli et Presta, ce qui permet de modifier une commande Doli sans risque de resynchro)
+ExtrafieldToolTip_sync = Uniquement pour les produits créés sur Dolibarr que l'on ne souhaite pas sychroniser sur Presta, ou bien pour des produits que l'on souhaite désynchroniser.
+Extrafield_p_image = Url Image (Presta)
+Extrafield_p_id_user = ID Utilisateur Prestashop
+ExtrafieldToolTip_p_id_user = Sert à la synchronisation des données d'un commercial
+Extrafield_recpt_ok = Reçu
+Extrafield_expe_ok = Expédié
+
+#
+# Global
+#
+ASSIGN_COMMERCIAL = Assigner Commercial

@@ -1,0 +1,80 @@
+# Copyright (C) 2021 SuperAdmin <contact@iprospective.fr>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+#
+# Generic
+#
+
+# Module label 'ModuleMMIPrestaSyncName'
+ModuleMMIPrestaSyncName = MMIPrestaSync
+# Module description 'ModuleMMIPrestaSyncDesc'
+ModuleMMIPrestaSyncDesc = MMIPrestaSync description
+
+MMIPrestaSYNC_PS_URL = Prestashop URL
+MMIPrestaSYNC_PS_URLTooltip = https://www.myprestashopwebsite.com/
+MMIPrestaSYNC_PS_WSKEY = Prestashop Webservice Key
+MMIPrestaSYNC_PS_WSKEYTooltip = HZUGHUZSDGHZUDGHUIZGDUIZGD
+MMIPrestaSYNC_ENTREPOT_ID = Entrepot Dolibarr à synnchroniser (ID)
+MMIPrestaSYNC_ENTREPOT_PS_ID = Entrepot Prestashop à synnchroniser (ID)
+
+MMIPrestaSYNC_SYNC = Synchronisation is active
+MMIPrestaSYNC_SYNCTooltip = 0:NO, 1:YES
+
+MMIPrestaSYNC_PRODUCT_SYNC = Synchronisation des produits
+MMIPrestaSYNC_PRODUCT_SYNCTooltip = 0:PAS, 1:Doli=>Presta, 2:Presta=>Doli, 3:Doli<=>Presta
+MMIPrestaSYNC_LOT_SYNC = Synchronisation des lots produit
+MMIPrestaSYNC_LOT_SYNCTooltip = My param 2 tooltip
+MMIPrestaSYNC_STOCK_SYNC = Synchronisation du stock
+MMIPrestaSYNC_STOCK_SYNCTooltip = My param 2 tooltip
+MMIPrestaSYNC_SUPPLIER_SYNC = Synchronisation Fournisseurs
+MMIPrestaSYNC_TIERS_SYNC = Synchronisation Tiers/Clients/Prospects
+MMIPrestaSYNC_EXPE_SYNC = Synchronisation expéditions
+MMIPrestaSYNC_ORDER_SYNC = Synchronisation Commandes
+MMIPrestaSYNC_INVOICE_SYNC = Synchronisation Factures et avoirs
+
+#
+# Page Index
+#
+MMIPrestaSyncArea = Synchronisation Prestashop/Dolibarr
+
+#
+# Admin page
+#
+MMIPrestaSyncSetup = MMIPrestaSync setup
+Settings = Settings
+MMIPrestaSyncSetupPage = MMIPrestaSync setup page
+
+#
+# Index page
+#
+MMIPrestaSyncArea = Synchronisation Prestashop/Dolibarr
+
+#
+# About page
+#
+About = About
+MMIPrestaSyncAbout = About MMIPrestaSync
+MMIPrestaSyncAboutPage = MMIPrestaSync about page
+
+#
+# Sample page
+#
+MyPageName = My page name
+
+#
+# Sample widget
+#
+MyWidget = My widget
+MyWidgetDescription = My widget description
