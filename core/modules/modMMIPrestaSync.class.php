@@ -265,6 +265,7 @@ class modMMIPrestaSync extends DolibarrModules
 		$r = 0;
 		// Add here entries to declare new permissions
 		/* BEGIN MODULEBUILDER PERMISSIONS */
+		/*
 		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
 		$this->rights[$r][1] = 'Read objects of mmiprestasync'; // Permission label
 		$this->rights[$r][4] = 'myobject'; // In php code, permission will be checked by test if ($user->rights->mmiprestasync->level1->level2)
@@ -280,6 +281,7 @@ class modMMIPrestaSync extends DolibarrModules
 		$this->rights[$r][4] = 'myobject'; // In php code, permission will be checked by test if ($user->rights->mmiprestasync->level1->level2)
 		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->rights->mmiprestasync->level1->level2)
 		$r++;
+		*/
 		/* END MODULEBUILDER PERMISSIONS */
 
 		// Main menu entries to add
