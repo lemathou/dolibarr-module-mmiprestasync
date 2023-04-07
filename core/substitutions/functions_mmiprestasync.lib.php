@@ -176,32 +176,50 @@ function mmiprestasync_completesubstitutionarray(&$substitutionarray,$langs,$obj
 	// Pas de TVA
 	if ($object->total_tva == 0) {
 		//var_dump($client);
-		// @todo outre-mer
+		// Transitaire
+		if (!empty($object->array_options['options_transitaire'])) {
+			$substitutionarray['reglement_tva_info'] = 'Exonération de TVA - Transitaire';
+		}
+		// DOM : Guadeloupe, Guyane, Martinique, Mayotte ou La Réunion
+		elseif ($substitutionarray['contact_fact_country_code']=='FR' && substr($substitutionarray['contact_livr_zip'], 0, 2)=='97') {
+			$substitutionarray['reglement_tva_info'] = 'Exonération de TVA en application de l’article 294 du code général des impôts (DOM)';
+		}
+		// TOM
+		elseif ($substitutionarray['contact_fact_country_code']=='FR' && substr($substitutionarray['contact_livr_zip'], 0, 2)=='98') {
+			$substitutionarray['reglement_tva_info'] = 'Exonération de TVA article 262 I du CGI (TOM)';
+		}
 		// UE avec code intra et tout qui va bien
-		if ($client->tva_intra && in_array($substitutionarray['contact_fact_country_code'], $countries_eu)) {
+		elseif ($client->tva_intra && in_array($substitutionarray['contact_fact_country_code'], $countries_eu)) {
 			$substitutionarray['reglement_tva_info'] = 'Exonération de TVA art. 262 ter, I du CGI';
 		}
-		// UE PRO sans code intra => a spécifier
-		elseif (($client->siren || $client->siret) && in_array($substitutionarray['contact_fact_country_code'], $countries_eu)) {
-			$substitutionarray['reglement_tva_info'] = 'Exonération de TVA art. 262 ter, I du CGI (N°TVA intracommunautaire à spécifier)';
+		elseif ($client->tva_intra) {
+			$substitutionarray['reglement_tva_info'] = 'Exonération de TVA art. 262 ter, I du CGI (Pays à spécifier)';
 		}
-		// UE sans code intra => particulier => tva du pays
+		// UE PRO sans code intra => a spécifier
+		elseif (($client->idprof1 || $client->idprof2) && in_array($substitutionarray['contact_fact_country_code'], $countries_eu)) {
+			$substitutionarray['reglement_tva_info'] = 'Exonération de TVA art. 262 ter, I du CGI (N°TVA intracom à spécifier)';
+		}
+		// Îles (Canaries, etc.)
+		elseif (false) {
+			$substitutionarray['reglement_tva_info'] = 'TVA non applicable – art. 259-1 du CGI (îles)';
+		}
+		// UE sans code intra => particulier => tva du pays => ERREUR PAS TVA
 		elseif (in_array($substitutionarray['contact_fact_country_code'], $countries_eu)) {
-			$substitutionarray['reglement_tva_info'] = '';
+			$substitutionarray['reglement_tva_info'] = 'ATTENTION PROBLEME! Exoneration de TVA pour un PARTICULIER en UE !';
 		}
 		// Hors UE
 		elseif ($substitutionarray['contact_fact_country_code'] && !in_array($substitutionarray['contact_fact_country_code'], $countries_eu)) {
-			$substitutionarray['reglement_tva_info'] = 'Exoneration de TVA, hors Union Européenne';
+			$substitutionarray['reglement_tva_info'] = 'TVA non applicable – art. 259-1 du CGI (Export hors UE)';
 		}
 		// PRO Pays non spécifié
-		elseif ($client->siren || $client->siret) {
+		elseif ($client->idprof1 || $client->idprof2) {
 			$substitutionarray['reglement_tva_info'] = '';
-			//$substitutionarray['reglement_tva_info'] = 'Exoneration de TVA, mais le pays du client n\'est pas spécifié';
+			$substitutionarray['reglement_tva_info'] = 'ATTENTION PROBLEME! Exoneration de TVA pour un PRO, mais le pays du client n\'est pas spécifié !';
 		}
 		// Pays non spécifié
 		else {
 			$substitutionarray['reglement_tva_info'] = '';
-			//$substitutionarray['reglement_tva_info'] = 'TVA facturée avec le taux pratiqué en France, car le pays du client n\'est pas spécifié';
+			$substitutionarray['reglement_tva_info'] = 'ATTENTION PROBLEME! Exoneration de TVA pour un PARTICULIER, ET le pays du client n\'est pas spécifié';
 		}
 	}
 	// TVA
