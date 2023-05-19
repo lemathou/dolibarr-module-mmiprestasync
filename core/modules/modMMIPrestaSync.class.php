@@ -545,6 +545,7 @@ class modMMIPrestaSync extends DolibarrModules
         $extrafields->addExtraField('garantie', $langs->trans('Extrafield_garantie'), 'varchar', 10, 255, 'product', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_garantie'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
         $extrafields->addExtraField('p_image', $langs->trans('Extrafield_p_image'), 'varchar', 10, 255, 'product', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_image'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
         $extrafields->addExtraField('longdescript', $langs->trans('Extrafield_longdescript'), 'html', 10, 2000, 'product', 0, 0, '', "", 1, '', 0, $langs->trans('ExtrafieldToolTip_longdescript'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('kit_unsync', $langs->trans('Extrafield_kit_unsync'), 'boolean', 10, '', 'product', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_kit_unsync'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled && $conf->global->MMIPRESTASYNC_FIELD_KIT_UNSYNC');
 		
 		// Commande
         $extrafields->addExtraField('p_ref', $langs->trans('Extrafield_p_ref'), 'varchar', 100, 16, 'commande', 0, 0, '', "", 1, '', 5, $langs->trans('ExtrafieldToolTip_p_ref'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');

@@ -34,22 +34,25 @@ $arrayofparameters = array(
 	'MMIPRESTASYNC_WS_SYNC_PASS'=>array('type'=>'securekey', 'css'=>'minwidth500', 'enabled'=>1),
 
 	// Config
-	'MMIPRESTASYNC_SYNC'=>array('css'=>'minwidth50', 'enabled'=>1),
+	'MMIPRESTASYNC_SYNC'=>array('type'=>'yesno', 'enabled'=>1),
 
 	// Synchro
-	'MMIPRESTASYNC_CUSTOMER_SYNC'=>array('css'=>'minwidth50', 'enabled'=>1),
-	'MMIPRESTASYNC_SUPPLIER_SYNC'=>array('css'=>'minwidth50', 'enabled'=>1),
-	'MMIPRESTASYNC_ADDRESS_SYNC'=>array('css'=>'minwidth50', 'enabled'=>1),
-	'MMIPRESTASYNC_PRODUCT_SYNC'=>array('css'=>'minwidth50', 'enabled'=>1),
-	'MMIPRESTASYNC_PRODUCT_LOT_SYNC'=>array('css'=>'minwidth50', 'enabled'=>1),
-	'MMIPRESTASYNC_SUPPLIER_PRICE_SYNC'=>array('css'=>'minwidth50', 'enabled'=>1),
-	'MMIPRESTASYNC_STOCK_SYNC'=>array('css'=>'minwidth50', 'enabled'=>1),
-	'MMIPRESTASYNC_ENTREPOT_IDS'=>array('css'=>'minwidth50', 'enabled'=>1),
-	'MMIPRESTASYNC_ORDER_SYNC'=>array('css'=>'minwidth50', 'enabled'=>1),
-	'MMIPRESTASYNC_ORDER_DETAIL_SYNC'=>array('css'=>'minwidth50', 'enabled'=>1),
-	'MMIPRESTASYNC_INVOICE_SYNC'=>array('css'=>'minwidth50', 'enabled'=>1),
-	'MMIPRESTASYNC_PAYMENT_SYNC'=>array('css'=>'minwidth50', 'enabled'=>1),
-	'MMIPRESTASYNC_SHIPPING_SYNC'=>array('css'=>'minwidth50', 'enabled'=>1),
+	'MMIPRESTASYNC_CUSTOMER_SYNC'=>array('type'=>'yesno', 'enabled'=>1),
+	'MMIPRESTASYNC_SUPPLIER_SYNC'=>array('type'=>'yesno', 'enabled'=>1),
+	'MMIPRESTASYNC_ADDRESS_SYNC'=>array('type'=>'yesno', 'enabled'=>1),
+	'MMIPRESTASYNC_PRODUCT_SYNC'=>array('type'=>'yesno', 'enabled'=>1),
+	'MMIPRESTASYNC_PRODUCT_LOT_SYNC'=>array('type'=>'yesno', 'enabled'=>1),
+	'MMIPRESTASYNC_SUPPLIER_PRICE_SYNC'=>array('type'=>'yesno', 'enabled'=>1),
+	'MMIPRESTASYNC_STOCK_SYNC'=>array('type'=>'yesno', 'enabled'=>1),
+	'MMIPRESTASYNC_ENTREPOT_IDS'=>array('type'=>'yesno', 'enabled'=>1),
+	'MMIPRESTASYNC_ORDER_SYNC'=>array('type'=>'yesno', 'enabled'=>1),
+	'MMIPRESTASYNC_ORDER_DETAIL_SYNC'=>array('type'=>'yesno', 'enabled'=>1),
+	'MMIPRESTASYNC_INVOICE_SYNC'=>array('type'=>'yesno', 'enabled'=>1),
+	'MMIPRESTASYNC_PAYMENT_SYNC'=>array('type'=>'yesno', 'enabled'=>1),
+	'MMIPRESTASYNC_SHIPPING_SYNC'=>array('type'=>'yesno', 'enabled'=>1),
+
+	// Spec
+	'MMIPRESTASYNC_FIELD_KIT_UNSYNC'=>array('type'=>'yesno', 'enabled'=>1),
 );
 
 require_once('../../mmicommon/admin/mmisetup_1.inc.php');

@@ -53,6 +53,8 @@ MMIPRESTASYNC_SHIPPING_SYNC = Synchronisation Expéditions client
 MMIPRESTASYNC_INVOICE_SYNC = Synchronisation Factures et avoirs
 MMIPRESTASYNC_PAYMENT_SYNC = Synchronisation Réglements client
 
+MMIPRESTASYNC_FIELD_KIT_UNSYNC = Ajoute un champ Produit spécifier pour un kit sans synchro vers un kit presta (utile pour des déclinaisons, ou si on ne veut pas afficher le détail du kit)
+
 #
 # Page Index
 #
@@ -114,6 +116,8 @@ Extrafield_p_id_user = ID Utilisateur Prestashop
 ExtrafieldToolTip_p_id_user = Sert à la synchronisation des données d'un commercial
 Extrafield_recpt_ok = Reçu
 Extrafield_expe_ok = Expédié
+Extrafield_kit_unsync = Ne pas synchroniser le Kit côté Presta
+ExtrafieldToolTip_kit_unsync = Particulièrement utile si on est sur une déclinaison ou si on ne souhaite pas détailler le kit sur presta, qu'il soit vu comme un produit normal.
 
 #
 # Global
