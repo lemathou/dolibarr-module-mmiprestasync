@@ -125,6 +125,7 @@ class InterfacePrestaSync extends DolibarrTriggers
 			// Companies
 			case 'COMPANY_CREATE':
 			case 'COMPANY_MODIFY':
+				// @var $object Societe
 				//var_dump($object); //die();
 				//var_dump($object->client); die();
 				if ($object->fournisseur || $object->client)
@@ -212,6 +213,7 @@ class InterfacePrestaSync extends DolibarrTriggers
 				break;
 			
 			case 'SUPPLIER_PRODUCT_BUYPRICE_UPDATE':
+			case 'SUPPLIER_PRODUCT_BUYPRICE_MODIFY':
 				//var_dump($object->product_fourn_price_id); var_dump($object); die('grrr');
 				// @todo buyprice !
 				mmi_prestasync::ws_trigger('supplier_price', 'product_fournisseur_price', 'osync', $object->product_fourn_price_id);
