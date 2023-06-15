@@ -9,6 +9,38 @@ function price_format($price)
 	return number_format(round($price, 2), 2, ',', ' ').' €';
 }
 
+function getLivCountryCode($object)
+{
+	global $db;
+
+	// Cache à la va-vite
+	static $list = [];
+	$object_type = get_class($object);
+	if(!isset($list[$object_type]))
+		$list[$object_type] = [];
+	if(isset($list[$object_type][$object->id]))
+		return $list[$object_type][$object->id];
+	
+	$client = new Client($db);
+	$client->fetch($object->socid);
+	$contacts = $object->liste_contact();
+	// Contact Livraison spécifique
+	foreach($contacts as $contact) {
+		if (in_array($contact['fk_c_type_contact'], [102, 42, 61])) {
+			$adresse = new Contact($db);
+			$adresse->fetch($contact['id']);
+			$contact_livr_country_code = $adresse->country_code;
+		}
+	}
+	// Contact Livraison par défaut
+	if (!isset($contact_livr_country_code)) {
+		$contact_livr_country_code = $client->country_code;
+	}
+	
+	return $list[$object_type][$object->id] = $contact_livr_country_code;
+}
+
+
 /** 		Function called to complete substitution array (before generating on ODT, or a personalized email)
  * 		functions xxx_completesubstitutionarray are called by make_substitutions() if file
  * 		is inside directory htdocs/core/substitutions
@@ -147,7 +179,7 @@ function mmiprestasync_completesubstitutionarray(&$substitutionarray,$langs,$obj
 		if (!isset($substitutionarray['contact_livr_lastname'])) {
 			$substitutionarray['contact_livr_firstname'] = '';
 			$substitutionarray['contact_livr_lastname'] = $client->name;
-			foreach(['address', 'zip', 'town', 'country', 'email', 'phone'] as $i)
+			foreach(['address', 'zip', 'town', 'country', 'country_code', 'email', 'phone'] as $i)
 				$substitutionarray['contact_livr_'.$i] = $client->{$i};
 		}
 		// Contact Facturation par défaut
@@ -166,7 +198,7 @@ function mmiprestasync_completesubstitutionarray(&$substitutionarray,$langs,$obj
 			$substitutionarray['contact_livr_country'] = '';
 			
 		$substitutionarray['contact_multi'] = true;
-		foreach(['address', 'zip', 'town', 'country', 'email', 'phone'] as $i)
+		foreach(['address', 'zip', 'town', 'country', 'country_code', 'email', 'phone'] as $i)
 			if ($substitutionarray['contact_livr_'.$i] != $substitutionarray['contact_fact_'.$i])
 				$substitutionarray['contact_multi'] = false;
 	}
@@ -260,6 +292,14 @@ function mmiprestasync_completesubstitutionarray_lines(&$substitutionarray,$lang
 
 	if (in_array($line_type, ['OrderLine', 'PropaleLigne', 'ExpeditionLigne', 'FactureLigne'])) {
 
+		$contact_livr_country_code = getLivCountryCode($object);
+		
+		// Contries EU
+		$countries_eu = explode(',', !empty($conf->global->MAIN_COUNTRIES_IN_EEC) ?$conf->global->MAIN_COUNTRIES_IN_EEC :'AT,BE,BG,CY,CZ,DE,DK,EE,ES,FI,FR,GB,GR,HR,NL,HU,IE,IM,IT,LT,LU,LV,MC,MT,PL,PT,RO,SE,SK,SI,UK');
+
+		// Vente export hors UE
+		$export = !empty($contact_livr_country_code) && !in_array($contact_livr_country_code, $countries_eu);
+
 		// Produit
 		if ($line->fk_product) {
 			$substitutionarray['line_type_product'] = true;
@@ -289,6 +329,16 @@ function mmiprestasync_completesubstitutionarray_lines(&$substitutionarray,$lang
 			$substitutionarray['line_product_ref'] = $line->ref;
 			$substitutionarray['line_label_'] = !empty(trim(strip_tags($line->label))) ?otf_entities($line->label) :otf_entities($line->product_label);
 			$substitutionarray['line_desc_'] = otf_entity_decode($line->desc);
+			// Affichage poids, pays d'origine, code nomenclature
+			if ($export && $line_type=='FactureLigne' && (!empty($product->weight) || !empty($product->customcode) || !empty($product->country_id))) {
+				$substitutionarray['line_desc_'] .= '<br />';
+				if (!empty($product->weight))
+					$substitutionarray['line_desc_'] .= '<br />Poids unitaire: '.$product->weight.measuringUnitString(0, "weight", $product->weight_units);
+				if (!empty($product->customcode))
+					$substitutionarray['line_desc_'] .= '<br />Nomenclature: '.$product->customcode;
+				if (!empty($product->country_id) && ($country=getCountry($product->country_id)))
+					$substitutionarray['line_desc_'] .= '<br />Origine: '.$country;
+			}
 			$substitutionarray['line_product_barcode'] = $line->product_barcode;
 
 			$substitutionarray['line_logo'] = ($img ?$img_dir.'/'.$img :'');
