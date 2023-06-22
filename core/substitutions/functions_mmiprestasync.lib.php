@@ -331,13 +331,14 @@ function mmiprestasync_completesubstitutionarray_lines(&$substitutionarray,$lang
 			$substitutionarray['line_desc_'] = otf_entity_decode($line->desc);
 			// Affichage poids, pays d'origine, code nomenclature
 			if ($export && $line_type=='FactureLigne' && (!empty($product->weight) || !empty($product->customcode) || !empty($product->country_id))) {
-				$substitutionarray['line_desc_'] .= '<br />';
+				$export_infos = [];
 				if (!empty($product->weight))
-					$substitutionarray['line_desc_'] .= '<br />Poids unitaire: '.$product->weight.measuringUnitString(0, "weight", $product->weight_units);
+					$export_infos[] = 'Poids unitaire: '.$product->weight.measuringUnitString(0, "weight", $product->weight_units);
 				if (!empty($product->customcode))
-					$substitutionarray['line_desc_'] .= '<br />Nomenclature: '.$product->customcode;
+					$export_infos[] = 'SH Code: '.$product->customcode;
 				if (!empty($product->country_id) && ($country=getCountry($product->country_id)))
-					$substitutionarray['line_desc_'] .= '<br />Origine: '.$country;
+					$export_infos[] = 'Origine: '.$country;
+				$substitutionarray['line_desc_'] .= '<br /><br />'.implode(' / ', $export_infos);
 			}
 			$substitutionarray['line_product_barcode'] = $line->product_barcode;
 
