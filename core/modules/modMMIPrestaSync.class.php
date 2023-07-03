@@ -103,6 +103,15 @@ class modMMIPrestaSync extends DolibarrModules
 			// Set here all hooks context managed by module. To find available hook context, make a "grep -r '>initHooks(' *" on source code. You can also set hook context to 'all'
 			'hooks' => array(
 				'pdfgeneration',
+				'ordercard',
+				'productcard',
+				'productlotcard',
+				'stockproductcard',
+				'pricesuppliercard',
+				'thirdpartysupplier',
+				'thirdpartycomm',
+				//'thirdpartycard',
+				'contactcard',
 				//   'data' => array(
 				//       'hookcontext1',
 				//       'hookcontext2',
@@ -263,6 +272,11 @@ class modMMIPrestaSync extends DolibarrModules
 		// Permissions provided by this module
 		$this->rights = array();
 		$r = 0;
+		$this->rights[$r][0] = $this->numero + $r; // Permission id (must not be already used)
+		$this->rights[$r][1] = 'Resynchroniser manuellement'; // Permission label
+		$this->rights[$r][4] = 'resync_button'; // In php code, permission will be checked by test if ($user->rights->mmiprestasync->level1->level2)
+		$this->rights[$r][5] = 'all'; // In php code, permission will be checked by test if ($user->rights->mmiprestasync->level1->level2)
+		$r++;
 		// Add here entries to declare new permissions
 		/* BEGIN MODULEBUILDER PERMISSIONS */
 		/*
@@ -289,162 +303,7 @@ class modMMIPrestaSync extends DolibarrModules
 		$r = 0;
 		// Add here entries to declare new menus
 		/* BEGIN MODULEBUILDER TOPMENU */
-		$this->menu[$r++] = array(
-			'fk_menu'=>'', // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type'=>'top', // This is a Top menu entry
-			'titre'=>'ModulemmiprestasyncName',
-			'mainmenu'=>'mmiprestasync',
-			'leftmenu'=>'',
-			'url'=>'/mmiprestasync/index.php',
-			'langs'=>'mmiprestasync@mmiprestasync', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'position'=>1000 + $r,
-			'enabled'=>'$conf->mmiprestasync->enabled', // Define condition to show or hide menu entry. Use '$conf->mmiprestasync->enabled' if entry must be visible if module is enabled.
-			'perms'=>'1', // Use 'perms'=>'$user->rights->mmiprestasync->myobject->read' if you want your menu with a permission rules
-			'target'=>'',
-			'user'=>0, // 0=Menu for internal users, 1=external users, 2=both
-		);
-		/* END MODULEBUILDER TOPMENU */
-		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=mmiprestasync',      // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type'=>'left',                          // This is a Top menu entry
-			'titre'=>'Sync Prestashop',
-			'mainmenu'=>'mmiprestasync',
-			'leftmenu'=>'index',
-			'url'=>'/mmiprestasync/index.php',
-			'langs'=>'mmiprestasync@mmiprestasync',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'position'=>1000+$r,
-			'enabled'=>'$conf->mmiprestasync->enabled',  // Define condition to show or hide menu entry. Use '$conf->mmiprestasync->enabled' if entry must be visible if module is enabled.
-			'perms'=>'$user->rights->mmiprestasync->myobject->read',			                // Use 'perms'=>'$user->rights->mmiprestasync->level1->level2' if you want your menu with a permission rules
-			'target'=>'',
-			'user'=>0,				                // 0=Menu for internal users, 1=external users, 2=both
-		);
-		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=mmiprestasync,fk_leftmenu=index',      // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type'=>'left',                          // This is a Top menu entry
-			'titre'=>'Fournisseurs',
-			'mainmenu'=>'mmiprestasync',
-			'leftmenu'=>'supplier',
-			'url'=>'/mmiprestasync/supplier.php',
-			'langs'=>'mmiprestasync@mmiprestasync',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'position'=>1000+$r,
-			'enabled'=>'$conf->mmiprestasync->enabled',  // Define condition to show or hide menu entry. Use '$conf->mmiprestasync->enabled' if entry must be visible if module is enabled.
-			'perms'=>'$user->rights->mmiprestasync->myobject->read',			                // Use 'perms'=>'$user->rights->mmiprestasync->level1->level2' if you want your menu with a permission rules
-			'target'=>'',
-			'user'=>0,				                // 0=Menu for internal users, 1=external users, 2=both
-		);
-		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=mmiprestasync,fk_leftmenu=index',      // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type'=>'left',                          // This is a Top menu entry
-			'titre'=>'Produit',
-			'mainmenu'=>'mmiprestasync',
-			'leftmenu'=>'product',
-			'url'=>'/mmiprestasync/product.php',
-			'langs'=>'mmiprestasync@mmiprestasync',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'position'=>1000+$r,
-			'enabled'=>'$conf->mmiprestasync->enabled',  // Define condition to show or hide menu entry. Use '$conf->mmiprestasync->enabled' if entry must be visible if module is enabled.
-			'perms'=>'$user->rights->mmiprestasync->myobject->read',			                // Use 'perms'=>'$user->rights->mmiprestasync->level1->level2' if you want your menu with a permission rules
-			'target'=>'',
-			'user'=>0,				                // 0=Menu for internal users, 1=external users, 2=both
-		);
-		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=mmiprestasync,fk_leftmenu=index',      // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type'=>'left',                          // This is a Top menu entry
-			'titre'=>'Lots produit',
-			'mainmenu'=>'mmiprestasync',
-			'leftmenu'=>'product_lot',
-			'url'=>'/mmiprestasync/product_lot.php',
-			'langs'=>'mmiprestasync@mmiprestasync',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'position'=>1000+$r,
-			'enabled'=>'$conf->mmiprestasync->enabled',  // Define condition to show or hide menu entry. Use '$conf->mmiprestasync->enabled' if entry must be visible if module is enabled.
-			'perms'=>'$user->rights->mmiprestasync->myobject->read',			                // Use 'perms'=>'$user->rights->mmiprestasync->level1->level2' if you want your menu with a permission rules
-			'target'=>'',
-			'user'=>0,				                // 0=Menu for internal users, 1=external users, 2=both
-		);
-		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=mmiprestasync,fk_leftmenu=index',      // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type'=>'left',                          // This is a Top menu entry
-			'titre'=>'Stock',
-			'mainmenu'=>'mmiprestasync',
-			'leftmenu'=>'stock',
-			'url'=>'/mmiprestasync/stock.php',
-			'langs'=>'mmiprestasync@mmiprestasync',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'position'=>1000+$r,
-			'enabled'=>'$conf->mmiprestasync->enabled',  // Define condition to show or hide menu entry. Use '$conf->mmiprestasync->enabled' if entry must be visible if module is enabled.
-			'perms'=>'$user->rights->mmiprestasync->myobject->read',			                // Use 'perms'=>'$user->rights->mmiprestasync->level1->level2' if you want your menu with a permission rules
-			'target'=>'',
-			'user'=>0,				                // 0=Menu for internal users, 1=external users, 2=both
-		);
-		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=mmiprestasync,fk_leftmenu=index',      // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type'=>'left',                          // This is a Top menu entry
-			'titre'=>'Tiers',
-			'mainmenu'=>'mmiprestasync',
-			'leftmenu'=>'tiers',
-			'url'=>'/mmiprestasync/tiers.php',
-			'langs'=>'mmiprestasync@mmiprestasync',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'position'=>1000+$r,
-			'enabled'=>'$conf->mmiprestasync->enabled',  // Define condition to show or hide menu entry. Use '$conf->mmiprestasync->enabled' if entry must be visible if module is enabled.
-			'perms'=>'$user->rights->mmiprestasync->myobject->read',			                // Use 'perms'=>'$user->rights->mmiprestasync->level1->level2' if you want your menu with a permission rules
-			'target'=>'',
-			'user'=>0,				                // 0=Menu for internal users, 1=external users, 2=both
-		);
-		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=mmiprestasync,fk_leftmenu=index',      // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type'=>'left',                          // This is a Top menu entry
-			'titre'=>'Commandes',
-			'mainmenu'=>'mmiprestasync',
-			'leftmenu'=>'order',
-			'url'=>'/mmiprestasync/order.php',
-			'langs'=>'mmiprestasync@mmiprestasync',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'position'=>1000+$r,
-			'enabled'=>'$conf->mmiprestasync->enabled',  // Define condition to show or hide menu entry. Use '$conf->mmiprestasync->enabled' if entry must be visible if module is enabled.
-			'perms'=>'$user->rights->mmiprestasync->myobject->read',			                // Use 'perms'=>'$user->rights->mmiprestasync->level1->level2' if you want your menu with a permission rules
-			'target'=>'',
-			'user'=>0,				                // 0=Menu for internal users, 1=external users, 2=both
-		);
 		/* BEGIN MODULEBUILDER LEFTMENU MYOBJECT
-		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=mmiprestasync',      // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type'=>'left',                          // This is a Top menu entry
-			'titre'=>'MyObject',
-			'mainmenu'=>'mmiprestasync',
-			'leftmenu'=>'myobject',
-			'url'=>'/mmiprestasync/mmiprestasyncindex.php',
-			'langs'=>'mmiprestasync@mmiprestasync',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'position'=>1000+$r,
-			'enabled'=>'$conf->mmiprestasync->enabled',  // Define condition to show or hide menu entry. Use '$conf->mmiprestasync->enabled' if entry must be visible if module is enabled.
-			'perms'=>'$user->rights->mmiprestasync->myobject->read',			                // Use 'perms'=>'$user->rights->mmiprestasync->level1->level2' if you want your menu with a permission rules
-			'target'=>'',
-			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
-		);
-		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=mmiprestasync,fk_leftmenu=myobject',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type'=>'left',			                // This is a Left menu entry
-			'titre'=>'List MyObject',
-			'mainmenu'=>'mmiprestasync',
-			'leftmenu'=>'mmiprestasync_myobject_list',
-			'url'=>'/mmiprestasync/myobject_list.php',
-			'langs'=>'mmiprestasync@mmiprestasync',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'position'=>1000+$r,
-			'enabled'=>'$conf->mmiprestasync->enabled',  // Define condition to show or hide menu entry. Use '$conf->mmiprestasync->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'perms'=>'$user->rights->mmiprestasync->myobject->read',			                // Use 'perms'=>'$user->rights->mmiprestasync->level1->level2' if you want your menu with a permission rules
-			'target'=>'',
-			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
-		);
-		$this->menu[$r++]=array(
-			'fk_menu'=>'fk_mainmenu=mmiprestasync,fk_leftmenu=myobject',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type'=>'left',			                // This is a Left menu entry
-			'titre'=>'New MyObject',
-			'mainmenu'=>'mmiprestasync',
-			'leftmenu'=>'mmiprestasync_myobject_new',
-			'url'=>'/mmiprestasync/myobject_card.php?action=create',
-			'langs'=>'mmiprestasync@mmiprestasync',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'position'=>1000+$r,
-			'enabled'=>'$conf->mmiprestasync->enabled',  // Define condition to show or hide menu entry. Use '$conf->mmiprestasync->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'perms'=>'$user->rights->mmiprestasync->myobject->write',			                // Use 'perms'=>'$user->rights->mmiprestasync->level1->level2' if you want your menu with a permission rules
-			'target'=>'',
-			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
-		);
 		END MODULEBUILDER LEFTMENU MYOBJECT */
 		
 		// Disable menu

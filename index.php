@@ -25,6 +25,7 @@
  */
 
 // Load Dolibarr environment
+require_once 'env.inc.php';
 require_once 'main_load.inc.php';
 
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
@@ -43,10 +44,6 @@ if (isset($user->socid) && $user->socid > 0)
 	$action = '';
 	$socid = $user->socid;
 }
-
-$max = 5;
-$now = dol_now();
-
 
 /*
  * Actions
@@ -68,23 +65,7 @@ print load_fiche_titre($langs->trans("mmiprestasyncArea"), '', 'mmiprestasync.pn
 
 print '<div class="fichecenter"><div class="fichethirdleft">';
 
-echo "<h3>Données à Synchroniser :</h3>";
-
-echo "<p>Produits</p>";
-echo "<p>Fournisseurs</p>";
-echo "<p>Stocks</p>";
-echo "<p>Tiers (Clients/Prospects)</p>";
-echo "<p>Commandes</p>";
-echo "<p>Expéditions</p>";
-echo "<p>Factures/Avoirs</p>";
-echo "<p>Lots Produits (avec DLC/DLUO)</p>";
-
-
 print '</div><div class="fichetwothirdright"><div class="ficheaddleft">';
-
-
-$NBMAX = 3;
-$max = 3;
 
 print '</div></div></div>';
 

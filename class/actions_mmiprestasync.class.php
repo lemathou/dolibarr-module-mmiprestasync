@@ -1,23 +1,79 @@
 <?php
 
 dol_include_once('custom/mmicommon/class/mmi_actions.class.php');
+dol_include_once('custom/mmiprestasync/class/mmi_prestasync.class.php');
 
 class ActionsMMIPrestaSync extends MMI_Actions_1_0
 {
 	const MOD_NAME = 'mmiprestasync';
 
-	function doActions($parameters, &$object, &$action, $hookmanager)
+	function addMoreActionsButtons($parameters, &$object, &$action, $hookmanager)
 	{
+		global $user, $langs, $conf;
+
 		$error = 0; // Error counter
 		$myvalue = 'test'; // A result value
 
-		//print_r($parameters);
-		//echo "action: " . $action;
-		//print_r($object);
-
-		if (in_array('somecontext', explode(':', $parameters['context'])))
+		if (!empty($user->rights->mmiprestasync->resync_button->all) && $this->in_context($parameters, ['ordercard', 'productcard', 'productlotcard', 'stockproductcard', 'pricesuppliercard', 'thirdpartysupplier', 'thirdpartycomm', 'contactcard'])) //'thirdpartycard'
 		{
-		  // do something only for the context 'somecontext'
+			if ($this->in_context($parameters, 'ordercard')) {
+				$type = 'order';
+				$otype = 'commande';
+				$oid = $object->id;
+			}
+			elseif ($this->in_context($parameters, 'productcard')) {
+				$type = 'product';
+				$otype = 'product';
+				$oid = $object->id;
+			}
+			elseif ($this->in_context($parameters, 'productlotcard')) {
+				$type = 'product_lot';
+				$otype = 'product_lot';
+				$oid = $object->id;
+			}
+			elseif ($this->in_context($parameters, 'pricesuppliercard')) {
+				$type = 'supplier_price';
+				$otype = 'product_fournisseur_price';
+				// @todo choper le bon
+				$oid = '';
+			}
+			elseif ($this->in_context($parameters, 'stockproductcard')) {
+				$type = 'stock';
+				$otype = 'product_stock';
+				// @todo choper le bon
+				$oid = '';
+			}
+			elseif ($this->in_context($parameters, 'thirdpartysupplier')) {
+				$type = 'supplier';
+				$otype = 'societe';
+				$oid = $object->id;
+			}
+			elseif ($this->in_context($parameters, 'thirdpartycomm')) {
+				$type = 'customer';
+				$otype = 'societe';
+				$oid = $object->id;
+			}
+			elseif ($this->in_context($parameters, 'contactcard')) {
+				$type = 'address';
+				$otype = 'socpeople';
+				$oid = $object->id;
+			}
+
+			if (!empty($oid)) {
+				echo '<a class="butAction" href="/custom/mmiprestasync/ws2.php?type='.$type.'&otype='.$otype.'&oid='.$oid.'" onclick="MMI_PS_ajaxnotify(this.href); return false;">'.$langs->trans("MMIPrestaSynchronize").'</a>';
+				echo '<script>
+					function MMI_PS_ajaxnotify(url)
+					{
+						//console.log("URL : "+url);
+						$.get(url, function(r){
+							if (r.r==undefined || !r.r)
+								$.jnotify(\'Erreur de synchronisation...\');
+							else
+								$.jnotify(\'Synchronisation effectuée...\');
+						});
+					}
+				</script>';
+			}
 		}
 
 		if (! $error)

@@ -22,6 +22,7 @@
  */
 
 require_once DOL_DOCUMENT_ROOT.'/core/triggers/dolibarrtriggers.class.php';
+dol_include_once('custom/mmiprestasync/class/mmi_prestasync.class.php');
 
 /**
  *  Class of triggers for MyModule module
@@ -48,8 +49,6 @@ class InterfacePrestaSync extends DolibarrTriggers
 		// 'development', 'experimental', 'dolibarr' or version
 		$this->version = 'development';
 		$this->picto = 'logo@mmiprestasync';
-		
-		require_once DOL_DOCUMENT_ROOT.'/custom/mmiprestasync/class/mmi_prestasync.class.php';
 	}
 
 	/**
