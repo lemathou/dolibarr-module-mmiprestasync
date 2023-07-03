@@ -19,23 +19,20 @@ class ActionsMMIPrestaSync extends MMI_Actions_1_0
 			if ($this->in_context($parameters, 'ordercard')) {
 				$type = 'order';
 				$otype = 'commande';
-				$oid = $object->id;
+				if (!empty($object->array_options['options_sync']))
+					$oid = $object->id;
 			}
 			elseif ($this->in_context($parameters, 'productcard')) {
 				$type = 'product';
 				$otype = 'product';
-				$oid = $object->id;
+				if (!empty($object->array_options['options_sync']))
+					$oid = $object->id;
 			}
 			elseif ($this->in_context($parameters, 'productlotcard')) {
 				$type = 'product_lot';
 				$otype = 'product_lot';
+				// @todo check is product is synchronised
 				$oid = $object->id;
-			}
-			elseif ($this->in_context($parameters, 'pricesuppliercard')) {
-				$type = 'supplier_price';
-				$otype = 'product_fournisseur_price';
-				// @todo choper le bon
-				$oid = '';
 			}
 			elseif ($this->in_context($parameters, 'stockproductcard')) {
 				$type = 'stock';
@@ -43,9 +40,16 @@ class ActionsMMIPrestaSync extends MMI_Actions_1_0
 				// @todo choper le bon
 				$oid = '';
 			}
+			elseif ($this->in_context($parameters, 'pricesuppliercard')) {
+				$type = 'supplier_price';
+				$otype = 'product_fournisseur_price';
+				// @todo choper le bon
+				$oid = '';
+			}
 			elseif ($this->in_context($parameters, 'thirdpartysupplier')) {
 				$type = 'supplier';
 				$otype = 'societe';
+				// @todo : pas cohérent l'affichage avec groupe presta mais bon...
 				$oid = $object->id;
 			}
 			elseif ($this->in_context($parameters, 'thirdpartycomm')) {
@@ -56,7 +60,9 @@ class ActionsMMIPrestaSync extends MMI_Actions_1_0
 			elseif ($this->in_context($parameters, 'contactcard')) {
 				$type = 'address';
 				$otype = 'socpeople';
-				$oid = $object->id;
+				// @todo : Synchro presta field to activate
+				if (true || !empty($object->array_options['options_sync']))
+					$oid = $object->id;
 			}
 
 			if (!empty($oid)) {
