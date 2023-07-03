@@ -159,8 +159,6 @@ class modMMIPrestaSync extends DolibarrModules
 			$conf->mmiprestasync->enabled = 0;
 		}
 
-		// @todo add fields fk_entrepot & fk_adresse
-
 		// Array to add new pages in new tabs
 		$this->tabs = array();
 		// Example:
