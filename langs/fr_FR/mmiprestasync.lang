@@ -89,7 +89,6 @@ MyWidgetDescription = Description de mon widget
 # Champs supplémentaires
 #
 Extrafield_fk_parent_pack = Produit Pack parent
-Extrafield_fk_soc_fournisseur = Fournisseur par défaut (Presta)
 Extrafield_garantie = Garantie
 Extrafield_longdescript = Description longue HTML
 Extrafield_p_active = Actif (Presta)
@@ -105,8 +104,6 @@ Extrafield_p_ref = Réf. (Presta)
 Extrafield_p_state = Statut (Presta)
 Extrafield_p_group = Groupe (Presta)
 ExtrafieldToolTip_p_group = Group principal de client dans Prestashop
-Extrafield_supplier_ref = Réf. Fourn.
-ExtrafieldToolTip_supplier_ref = Référence du Fournisseur par défaut
 Extrafield_sync = Synchroniser (Presta)
 Extrafield_sync_contents = Synchroniser contenu (Presta)
 ExtrafieldToolTip_sync_contents = Cocher pour activier la synchro du contenu, qui pour l'instant ne fonctionne que dans le sens Presta=>Doli (sinon, les commandes seront désolidarisées entre Doli et Presta, ce qui permet de modifier une commande Doli sans risque de resynchro)

@@ -130,7 +130,7 @@ class modMMIPrestaSync extends DolibarrModules
 		// A condition to hide module
 		$this->hidden = false;
 		// List of module class names as string that must be enabled if this module is enabled. Example: array('always1'=>'modModuleToEnable1','always2'=>'modModuleToEnable2', 'FR1'=>'modModuleToEnableFR'...)
-		$this->depends = array('modMMICommon');
+		$this->depends = array('modMMICommon', 'modMMIProduct');
 		$this->requiredby = array(); // List of module class names as string to disable if this one is disabled. Example: array('modModuleToDisable1', ...)
 		$this->conflictwith = array(); // List of module class names as string this module is in conflict with. Example: array('modModuleToDisable1', ...)
 		$this->langfiles = array("mmiprestasync@mmiprestasync");
@@ -394,8 +394,6 @@ class modMMIPrestaSync extends DolibarrModules
 		
 		// Product
         $extrafields->addExtraField('sync', $langs->trans('Extrafield_sync'), 'boolean', 10, '', 'product', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_sync'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-         $extrafields->addExtraField('supplier_ref', $langs->trans('Extrafield_supplier_ref'), 'varchar', 10, 32, 'product', 0, 0, '', "", 1, '', 5, $langs->trans('ExtrafieldToolTip_supplier_ref'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-        $extrafields->addExtraField('fk_soc_fournisseur', $langs->trans('Extrafield_fk_soc_fournisseur'), 'sellist', 10, '', 'product', 0, 0, '', "a:1:{s:7:\"options\";a:1:{s:32:\"societe:nom:rowid::fournisseur=1\";N;}}", 1, '', 5, $langs->trans('ExtrafieldToolTip_fk_soc_fournisseur'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
         $extrafields->addExtraField('p_online_only', $langs->trans('Extrafield_p_online_only'), 'boolean', 10, '', 'product', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_online_only'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
         $extrafields->addExtraField('p_active', $langs->trans('Extrafield_p_active'), 'boolean', 10, '', 'product', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_p_active'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
         $extrafields->addExtraField('p_available_for_order', $langs->trans('Extrafield_p_available_for_order'), 'boolean', 10, '', 'product', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_available_for_order'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
