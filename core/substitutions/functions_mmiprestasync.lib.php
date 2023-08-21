@@ -367,8 +367,24 @@ function mmiprestasync_completesubstitutionarray_lines(&$substitutionarray,$lang
 			$substitutionarray['line_type_product'] = true;
 			//var_dump($line); die();
 			$substitutionarray['line_product_ref'] = '';
-			$substitutionarray['line_label_'] = otf_entities($line->label);
-			$substitutionarray['line_desc_'] = otf_entity_decode($line->desc);
+			//var_dump($line);
+			if (!empty($line->fk_remise_except) && $line->desc=='(DEPOSIT)') {
+				$label = 'Acompte';
+				$sql = 'SELECT f.ref, f.datef
+					FROM '.MAIN_DB_PREFIX.'societe_remise_except sr
+					INNER JOIN '.MAIN_DB_PREFIX.'facture f ON f.rowid=sr.fk_facture_source
+					WHERE sr.rowid='.$line->fk_remise_except;
+				$q = $db->query($sql);
+				if ($q && (list($f_ref, $f_date)=$q->fetch_row())) {
+					$label .= ' '.$f_ref.' du '.implode('/', array_reverse(explode('-', $f_date)));
+				}
+				$substitutionarray['line_label_'] = $label;
+				$substitutionarray['line_desc_'] = '';
+			}
+			else {
+				$substitutionarray['line_label_'] = otf_entities($line->label);
+				$substitutionarray['line_desc_'] = otf_entity_decode($line->desc);
+			}
 			$substitutionarray['line_product_barcode'] = '';
 
 			$substitutionarray['line_logo'] = '';
