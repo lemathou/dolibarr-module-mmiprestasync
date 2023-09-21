@@ -193,7 +193,7 @@ class modMMIPrestaSync extends DolibarrModules
 			// List of tables we want to see into dictonnary editor
 			'tabname'=>array(MAIN_DB_PREFIX."c_societe_p_group"),
 			// Label of tables
-			'tablib'=>array('Group Client Prestashop', 'Universe catregory'),
+			'tablib'=>array('Group Client Prestashop'),
 			// Request to select fields
 			'tabsql'=>array('SELECT f.rowid as rowid, f.code, f.label, f.active, f.pos FROM '.MAIN_DB_PREFIX.'c_societe_p_group as f',),
 			// Sort order
@@ -379,7 +379,7 @@ class modMMIPrestaSync extends DolibarrModules
         $extrafields->addExtraField('p_image', $langs->trans('Extrafield_p_image'), 'varchar', 10, 255, 'product', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_image'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
         $extrafields->addExtraField('longdescript', $langs->trans('Extrafield_longdescript'), 'html', 10, 2000, 'product', 0, 0, '', "", 1, '', 0, $langs->trans('ExtrafieldToolTip_longdescript'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
 		$extrafields->addExtraField('kit_unsync', $langs->trans('Extrafield_kit_unsync'), 'boolean', 10, '', 'product', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_kit_unsync'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled && $conf->global->MMIPRESTASYNC_FIELD_KIT_UNSYNC');
-        $extrafields->addExtraField('fk_categorie', $langs->trans('Extrafield_fk_categorie'), 'sellist', 100, '', 'product', 0, 0, '', "a:1:{s:7:\"options\";a:1:{s:23:\"categorie:label:rowid::\";N;}}", 1, '', -1, $langs->trans('ExtrafieldToolTip_fk_categorie'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+        $extrafields->addExtraField('fk_categorie', $langs->trans('	W'), 'sellist', 100, '', 'product', 0, 0, '', "a:1:{s:7:\"options\";a:1:{s:23:\"categorie:label:rowid::\";N;}}", 1, '', -1, $langs->trans('ExtrafieldToolTip_fk_categorie'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
 		
 		// Commande
         $extrafields->addExtraField('p_ref', $langs->trans('Extrafield_p_ref'), 'varchar', 100, 16, 'commande', 0, 0, '', "", 1, '', 5, $langs->trans('ExtrafieldToolTip_p_ref'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
