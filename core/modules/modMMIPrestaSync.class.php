@@ -193,9 +193,9 @@ class modMMIPrestaSync extends DolibarrModules
 			// List of tables we want to see into dictonnary editor
 			'tabname'=>array(MAIN_DB_PREFIX."c_societe_p_group"),
 			// Label of tables
-			'tablib'=>array('Group Client Prestashop'),
+			'tablib'=>array('Group Client Prestashop', 'Universe catregory'),
 			// Request to select fields
-			'tabsql'=>array('SELECT f.rowid as rowid, f.code, f.label, f.active, f.pos FROM '.MAIN_DB_PREFIX.'c_societe_p_group as f'),
+			'tabsql'=>array('SELECT f.rowid as rowid, f.code, f.label, f.active, f.pos FROM '.MAIN_DB_PREFIX.'c_societe_p_group as f',),
 			// Sort order
 			'tabsqlsort'=>array("pos ASC"),
 			// List of fields (result of select to show dictionary)
@@ -209,29 +209,6 @@ class modMMIPrestaSync extends DolibarrModules
 			// Condition to show each dictionary
 			'tabcond'=>array($conf->mmiprestasync->enabled)
 		);
-		/* Example:
-		$this->dictionaries=array(
-			'langs'=>'mmiprestasync@mmiprestasync',
-			// List of tables we want to see into dictonnary editor
-			'tabname'=>array(MAIN_DB_PREFIX."table1", MAIN_DB_PREFIX."table2", MAIN_DB_PREFIX."table3"),
-			// Label of tables
-			'tablib'=>array("Table1", "Table2", "Table3"),
-			// Request to select fields
-			'tabsql'=>array('SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'table1 as f', 'SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'table2 as f', 'SELECT f.rowid as rowid, f.code, f.label, f.active FROM '.MAIN_DB_PREFIX.'table3 as f'),
-			// Sort order
-			'tabsqlsort'=>array("label ASC", "label ASC", "label ASC"),
-			// List of fields (result of select to show dictionary)
-			'tabfield'=>array("code,label", "code,label", "code,label"),
-			// List of fields (list of fields to edit a record)
-			'tabfieldvalue'=>array("code,label", "code,label", "code,label"),
-			// List of fields (list of fields for insert)
-			'tabfieldinsert'=>array("code,label", "code,label", "code,label"),
-			// Name of columns with primary key (try to always name it 'rowid')
-			'tabrowid'=>array("rowid", "rowid", "rowid"),
-			// Condition to show each dictionary
-			'tabcond'=>array($conf->mmiprestasync->enabled, $conf->mmiprestasync->enabled, $conf->mmiprestasync->enabled)
-		);
-		*/
 
 		// Boxes/Widgets
 		// Add here list of php file(s) stored in mmiprestasync/core/boxes that contains a class to show a widget.
@@ -378,7 +355,7 @@ class modMMIPrestaSync extends DolibarrModules
         include_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
         $extrafields = new ExtraFields($this->db);
 		//addExtraField($attrname, $label, $type, $pos, $size, $elementtype, $unique = 0, $required = 0, $default_value = '', $param = '', $alwayseditable = 0, $perms = '', $list = '-1', $help = '', $computed = '', $entity = '', $langfile = '', $enabled = '1', $totalizable = 0, $printable = 0)
-		
+
 		// Societe
         $extrafields->addExtraField('p_group', $langs->trans('Extrafield_p_group'), 'sellist', 100, '', 'societe', 0, 0, '', "a:1:{s:7:\"options\";a:1:{s:31:\"c_societe_p_group:label:rowid::\";N;}}", 1, '', -1, $langs->trans('ExtrafieldToolTip_p_group'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
         $extrafields->addExtraField('p_lastname', $langs->trans('Extrafield_p_lastname'), 'varchar', 1, 255, 'societe', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_lastname'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
@@ -402,6 +379,7 @@ class modMMIPrestaSync extends DolibarrModules
         $extrafields->addExtraField('p_image', $langs->trans('Extrafield_p_image'), 'varchar', 10, 255, 'product', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_image'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
         $extrafields->addExtraField('longdescript', $langs->trans('Extrafield_longdescript'), 'html', 10, 2000, 'product', 0, 0, '', "", 1, '', 0, $langs->trans('ExtrafieldToolTip_longdescript'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
 		$extrafields->addExtraField('kit_unsync', $langs->trans('Extrafield_kit_unsync'), 'boolean', 10, '', 'product', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_kit_unsync'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled && $conf->global->MMIPRESTASYNC_FIELD_KIT_UNSYNC');
+        $extrafields->addExtraField('fk_categorie', $langs->trans('Extrafield_fk_categorie'), 'sellist', 100, '', 'product', 0, 0, '', "a:1:{s:7:\"options\";a:1:{s:23:\"categorie:label:rowid::\";N;}}", 1, '', -1, $langs->trans('ExtrafieldToolTip_fk_categorie'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
 		
 		// Commande
         $extrafields->addExtraField('p_ref', $langs->trans('Extrafield_p_ref'), 'varchar', 100, 16, 'commande', 0, 0, '', "", 1, '', 5, $langs->trans('ExtrafieldToolTip_p_ref'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');

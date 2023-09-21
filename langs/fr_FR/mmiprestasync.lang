@@ -117,6 +117,7 @@ Extrafield_recpt_ok = Reçu
 Extrafield_expe_ok = Expédié
 Extrafield_kit_unsync = Ne pas synchroniser le Kit côté Presta
 ExtrafieldToolTip_kit_unsync = Particulièrement utile si on est sur une déclinaison ou si on ne souhaite pas détailler le kit sur presta, qu'il soit vu comme un produit normal.
+Extrafield_fk_categorie = Catégorie principale (presta)
 
 #
 # Global
