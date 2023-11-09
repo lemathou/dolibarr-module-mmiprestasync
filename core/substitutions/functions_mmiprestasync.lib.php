@@ -81,7 +81,7 @@ function getLiv($object)
  */
 function mmiprestasync_completesubstitutionarray(&$substitutionarray,$langs,$object)
 {
-	global $conf, $db;
+	global $conf, $db, $mysoc;
 
 	if (!is_object($object))
 		return;
@@ -95,6 +95,9 @@ function mmiprestasync_completesubstitutionarray(&$substitutionarray,$langs,$obj
 		//var_dump($bank);
 	}
 	//PAYMENTBYBANKTRANSFER_ID_BANKACCOUNT
+
+	// EORI Export
+	$substitutionarray['mycompany_eori'] = !empty($mysoc->idprof5) ?' / EORI '.$mysoc->idprof5 :'';
 
 	$object_type = get_class($object);
 	//var_dump($object_type); die();
