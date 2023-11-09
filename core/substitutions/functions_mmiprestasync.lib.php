@@ -40,6 +40,35 @@ function getLivCountryCode($object)
 	return $list[$object_type][$object->id] = $contact_livr_country_code;
 }
 
+function getLiv($object)
+{
+	global $db;
+
+	// Cache à la va-vite
+	static $list = [];
+	static $list2 = [];
+	$object_type = get_class($object);
+	if(!isset($list[$object_type]))
+		$list[$object_type] = [];
+	if(isset($list[$object_type][$object->id]))
+		return $list[$object_type][$object->id];
+	
+	$client = new Client($db);
+	$client->fetch($object->socid);
+	$contacts = $object->liste_contact();
+	// Contact Livraison spécifique
+	foreach($contacts as $contact) {
+		if (in_array($contact['fk_c_type_contact'], [102, 42, 61])) {
+			$adresse = new Contact($db);
+			$adresse->fetch($contact['id']);
+			$list[$object_type][$object->id] = $adresse;
+			return $adresse;
+		}
+	}
+	
+	return $list[$object_type][$object->id] = $client;
+}
+
 
 /** 		Function called to complete substitution array (before generating on ODT, or a personalized email)
  * 		functions xxx_completesubstitutionarray are called by make_substitutions() if file
@@ -285,6 +314,7 @@ function mmiprestasync_completesubstitutionarray_lines(&$substitutionarray,$lang
 {
 	global $conf,$db;
 
+	$thirdparty = $object->thirdparty;
 	$object_type = get_class($object);
 	$line_type = get_class($line);
 	//die($line_type);
@@ -293,12 +323,16 @@ function mmiprestasync_completesubstitutionarray_lines(&$substitutionarray,$lang
 	if (in_array($line_type, ['OrderLine', 'PropaleLigne', 'ExpeditionLigne', 'FactureLigne'])) {
 
 		$contact_livr_country_code = getLivCountryCode($object);
+		$liv = getLiv($object);
 		
 		// Contries EU
 		$countries_eu = explode(',', !empty($conf->global->MAIN_COUNTRIES_IN_EEC) ?$conf->global->MAIN_COUNTRIES_IN_EEC :'AT,BE,BG,CY,CZ,DE,DK,EE,ES,FI,FR,GB,GR,HR,NL,HU,IE,IM,IT,LT,LU,LV,MC,MT,PL,PT,RO,SE,SK,SI,UK');
-
 		// Vente export hors UE
-		$export = !empty($contact_livr_country_code) && !in_array($contact_livr_country_code, $countries_eu);
+		$export = !empty($contact_livr_country_code) 
+			&& (
+				!in_array($contact_livr_country_code, $countries_eu)
+				|| ($contact_livr_country_code=='FR' && !empty($liv) && in_array(substr($liv->zip, 0, 2), ['97', '98']))
+			);
 
 		// Produit
 		if ($line->fk_product) {
@@ -330,7 +364,7 @@ function mmiprestasync_completesubstitutionarray_lines(&$substitutionarray,$lang
 			$substitutionarray['line_label_'] = !empty(trim(strip_tags($line->label))) ?otf_entities($line->label) :otf_entities($line->product_label);
 			$substitutionarray['line_desc_'] = otf_entity_decode($line->desc);
 			// Affichage poids, pays d'origine, code nomenclature
-			if ($export && $line_type=='FactureLigne' && (!empty($product->weight) || !empty($product->customcode) || !empty($product->country_id))) {
+			if (($export) && $line_type=='FactureLigne' && (!empty($product->weight) || !empty($product->customcode) || !empty($product->country_id))) {
 				$export_infos = [];
 				if (!empty($product->weight))
 					$export_infos[] = 'Poids unitaire: '.$product->weight.measuringUnitString(0, "weight", $product->weight_units);
