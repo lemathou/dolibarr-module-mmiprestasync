@@ -4,10 +4,41 @@ require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
 require_once DOL_DOCUMENT_ROOT.'/societe/class/client.class.php';
 require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
 
-function price_format($price)
-{
-	return number_format(round($price, 2), 2, ',', ' ').' €';
+if (!function_exists('price_format')) {
+	function price_format($price)
+	{
+		return number_format(round($price, 2), 2, ',', ' ').' €';
+	}
 }
+
+if (!function_exists('otf_entities')) {
+	function otf_entities($str)
+	{
+		//return htmlspecialchars(html_entity_decode($str));
+		// identique tant qu'on en rajoute pas
+		global $otf_char, $otf_char_enc;
+		return str_replace(
+			$otf_char,
+			$otf_char_enc,
+			html_entity_decode($str)
+		);
+	}
+
+	function otf_entity_decode($str)
+	{
+		global $otf_char_enc, $otf_char_tmp;
+		return str_replace([' < ', ' > '], [' &lt; ', ' &gt; '], str_replace(
+			$otf_char_tmp,
+			$otf_char_enc,
+			html_entity_decode(str_replace(
+				$otf_char_enc,
+				$otf_char_tmp,
+				$str
+			))
+		));
+	}
+}
+
 
 function getLivCountryCode($object)
 {
@@ -82,6 +113,8 @@ function getLiv($object)
 function mmiprestasync_completesubstitutionarray(&$substitutionarray,$langs,$object)
 {
 	global $conf, $db, $mysoc;
+
+	$langs->load('mmiprestasync@mmiprestasync');
 
 	if (!is_object($object))
 		return;
@@ -418,6 +451,11 @@ function mmiprestasync_completesubstitutionarray_lines(&$substitutionarray,$lang
 				$substitutionarray['line_label_'] = $label;
 				$substitutionarray['line_desc_'] = '';
 			}
+			elseif (substr($line->desc, 0, 9) == '(DEPOSIT)') {
+				$line->desc = $langs->trans('DEPOSIT').substr($line->desc, 9);
+				$substitutionarray['line_label_'] = otf_entities($line->label);
+				$substitutionarray['line_desc_'] = otf_entity_decode($line->desc);
+			}
 			else {
 				$substitutionarray['line_label_'] = otf_entities($line->label);
 				$substitutionarray['line_desc_'] = otf_entity_decode($line->desc);
@@ -508,30 +546,4 @@ foreach($otf_char_list as $i=>$j) {
 	$GLOBALS['otf_char'][] = $i;
 	$GLOBALS['otf_char_enc'][] = '&'.$j.';';
 	$GLOBALS['otf_char_tmp'][] = '&'.$j.'_mmi;';
-}
-
-function otf_entities($str)
-{
-	//return htmlspecialchars(html_entity_decode($str));
-	// identique tant qu'on en rajoute pas
-	global $otf_char, $otf_char_enc;
-	return str_replace(
-		$otf_char,
-		$otf_char_enc,
-		html_entity_decode($str)
-	);
-}
-
-function otf_entity_decode($str)
-{
-	global $otf_char_enc, $otf_char_tmp;
-	return str_replace([' < ', ' > '], [' &lt; ', ' &gt; '], str_replace(
-		$otf_char_tmp,
-		$otf_char_enc,
-		html_entity_decode(str_replace(
-			$otf_char_enc,
-			$otf_char_tmp,
-			$str
-		))
-	));
 }

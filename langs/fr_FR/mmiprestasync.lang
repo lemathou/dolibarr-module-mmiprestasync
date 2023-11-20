@@ -124,3 +124,4 @@ Extrafield_fk_categorie = Catégorie principale (presta)
 #
 ASSIGN_COMMERCIAL = Assigner Commercial
 MMIPrestaSynchronize = ReSynchroniser Presta
+DEPOSIT = Acompte
