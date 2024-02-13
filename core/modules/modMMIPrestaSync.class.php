@@ -130,7 +130,7 @@ class modMMIPrestaSync extends DolibarrModules
 		// A condition to hide module
 		$this->hidden = false;
 		// List of module class names as string that must be enabled if this module is enabled. Example: array('always1'=>'modModuleToEnable1','always2'=>'modModuleToEnable2', 'FR1'=>'modModuleToEnableFR'...)
-		$this->depends = array('modMMICommon', 'modMMIProduct');
+		$this->depends = array('modMMICommon', 'modMMIProduct', 'modMMIFournisseurPrice', 'modMMIWorkflow');
 		$this->requiredby = array(); // List of module class names as string to disable if this one is disabled. Example: array('modModuleToDisable1', ...)
 		$this->conflictwith = array(); // List of module class names as string this module is in conflict with. Example: array('modModuleToDisable1', ...)
 		$this->langfiles = array("mmiprestasync@mmiprestasync");
@@ -352,50 +352,46 @@ class modMMIPrestaSync extends DolibarrModules
 		if ($result < 0) return -1; // Do not activate module if error 'not allowed' returned when loading module SQL queries (the _load_table run sql with run_sql with the error allowed parameter set to 'default')
 
 		// Create extrafields during init
-        include_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
-        $extrafields = new ExtraFields($this->db);
+		include_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
+		$extrafields = new ExtraFields($this->db);
 		//addExtraField($attrname, $label, $type, $pos, $size, $elementtype, $unique = 0, $required = 0, $default_value = '', $param = '', $alwayseditable = 0, $perms = '', $list = '-1', $help = '', $computed = '', $entity = '', $langfile = '', $enabled = '1', $totalizable = 0, $printable = 0)
 
 		// Societe
-        $extrafields->addExtraField('p_group', $langs->trans('Extrafield_p_group'), 'sellist', 100, '', 'societe', 0, 0, '', "a:1:{s:7:\"options\";a:1:{s:31:\"c_societe_p_group:label:rowid::\";N;}}", 1, '', -1, $langs->trans('ExtrafieldToolTip_p_group'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-        $extrafields->addExtraField('p_lastname', $langs->trans('Extrafield_p_lastname'), 'varchar', 1, 255, 'societe', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_lastname'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-        $extrafields->addExtraField('p_firstname', $langs->trans('Extrafield_p_firstname'), 'varchar', 1, 255, 'societe', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_firstname'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-        $extrafields->addExtraField('p_company', $langs->trans('Extrafield_p_company'), 'varchar', 1, 255, 'societe', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_company'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_group', $langs->trans('Extrafield_p_group'), 'sellist', 100, '', 'societe', 0, 0, '', "a:1:{s:7:\"options\";a:1:{s:31:\"c_societe_p_group:label:rowid::\";N;}}", 1, '', -1, $langs->trans('ExtrafieldToolTip_p_group'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_lastname', $langs->trans('Extrafield_p_lastname'), 'varchar', 1, 255, 'societe', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_lastname'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_firstname', $langs->trans('Extrafield_p_firstname'), 'varchar', 1, 255, 'societe', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_firstname'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_company', $langs->trans('Extrafield_p_company'), 'varchar', 1, 255, 'societe', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_company'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
 		
 		// Socpeople
-        $extrafields->addExtraField('p_alias', $langs->trans('Extrafield_p_alias'), 'varchar', 1, 255, 'socpeople', 0, 0, '', "", 1, '', 1, $langs->trans('ExtrafieldToolTip_p_alias'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-        $extrafields->addExtraField('p_address2', $langs->trans('Extrafield_p_address2'), 'varchar', 10, 255, 'socpeople', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_address2'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-        $extrafields->addExtraField('p_company', $langs->trans('Extrafield_p_company'), 'varchar', 10, 255, 'socpeople', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_company'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-        $extrafields->addExtraField('p_deleted', $langs->trans('Extrafield_p_deleted'), 'boolean', 100, '', 'socpeople', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_deleted'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-        $extrafields->addExtraField('p_sync', $langs->trans('Extrafield_sync'), 'boolean', 10, '', 'socpeople', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_sync'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_alias', $langs->trans('Extrafield_p_alias'), 'varchar', 1, 255, 'socpeople', 0, 0, '', "", 1, '', 1, $langs->trans('ExtrafieldToolTip_p_alias'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_address2', $langs->trans('Extrafield_p_address2'), 'varchar', 10, 255, 'socpeople', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_address2'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_company', $langs->trans('Extrafield_p_company'), 'varchar', 10, 255, 'socpeople', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_company'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_deleted', $langs->trans('Extrafield_p_deleted'), 'boolean', 100, '', 'socpeople', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_deleted'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_sync', $langs->trans('Extrafield_sync'), 'boolean', 10, '', 'socpeople', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_sync'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
 		
 		// Product
-        $extrafields->addExtraField('sync', $langs->trans('Extrafield_sync'), 'boolean', 10, '', 'product', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_sync'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-        $extrafields->addExtraField('p_online_only', $langs->trans('Extrafield_p_online_only'), 'boolean', 10, '', 'product', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_online_only'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-        $extrafields->addExtraField('p_active', $langs->trans('Extrafield_p_active'), 'boolean', 10, '', 'product', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_p_active'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-        $extrafields->addExtraField('p_decli_disabled', $langs->trans('Extrafield_p_decli_disabled'), 'boolean', 10, '', 'product', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_p_decli_disabled'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-        $extrafields->addExtraField('p_available_for_order', $langs->trans('Extrafield_p_available_for_order'), 'boolean', 10, '', 'product', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_available_for_order'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-        $extrafields->addExtraField('garantie', $langs->trans('Extrafield_garantie'), 'varchar', 10, 255, 'product', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_garantie'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-        $extrafields->addExtraField('p_image', $langs->trans('Extrafield_p_image'), 'varchar', 10, 255, 'product', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_image'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-        $extrafields->addExtraField('longdescript', $langs->trans('Extrafield_longdescript'), 'html', 10, 2000, 'product', 0, 0, '', "", 1, '', 0, $langs->trans('ExtrafieldToolTip_longdescript'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('sync', $langs->trans('Extrafield_sync'), 'boolean', 10, '', 'product', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_sync'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_online_only', $langs->trans('Extrafield_p_online_only'), 'boolean', 10, '', 'product', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_online_only'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_active', $langs->trans('Extrafield_p_active'), 'boolean', 10, '', 'product', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_p_active'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_decli_disabled', $langs->trans('Extrafield_p_decli_disabled'), 'boolean', 10, '', 'product', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_p_decli_disabled'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_available_for_order', $langs->trans('Extrafield_p_available_for_order'), 'boolean', 10, '', 'product', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_available_for_order'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_image', $langs->trans('Extrafield_p_image'), 'varchar', 10, 255, 'product', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_image'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('longdescript', $langs->trans('Extrafield_longdescript'), 'html', 10, 2000, 'product', 0, 0, '', "", 1, '', 0, $langs->trans('ExtrafieldToolTip_longdescript'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
 		$extrafields->addExtraField('kit_unsync', $langs->trans('Extrafield_kit_unsync'), 'boolean', 10, '', 'product', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_kit_unsync'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled && $conf->global->MMIPRESTASYNC_FIELD_KIT_UNSYNC');
-        $extrafields->addExtraField('fk_categorie', $langs->trans('	W'), 'sellist', 100, '', 'product', 0, 0, '', "a:1:{s:7:\"options\";a:1:{s:23:\"categorie:label:rowid::\";N;}}", 1, '', -1, $langs->trans('ExtrafieldToolTip_fk_categorie'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		// Attention déjà fk_categorie_default dans MMIProduct mais pour calcul prix, ici c'est celle de presta !
+		$extrafields->addExtraField('fk_categorie', $langs->trans('Extrafield_p_fk_categorie'), 'sellist', 100, '', 'product', 0, 0, '', "a:1:{s:7:\"options\";a:1:{s:23:\"categorie:label:rowid::\";N;}}", 1, '', -1, $langs->trans('ExtrafieldToolTip_p_fk_categorie'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
 		
 		// Commande
-        $extrafields->addExtraField('p_ref', $langs->trans('Extrafield_p_ref'), 'varchar', 100, 16, 'commande', 0, 0, '', "", 1, '', 5, $langs->trans('ExtrafieldToolTip_p_ref'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-        $extrafields->addExtraField('p_state', $langs->trans('Extrafield_p_state'), 'sellist', 100, '', 'commande', 0, 0, '', "a:1:{s:7:\"options\";a:1:{s:36:\"ps_order_state:name:id_order_state::\";N;}}", 1, '', 5, $langs->trans('ExtrafieldToolTip_p_state'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-        $extrafields->addExtraField('expe_ok', $langs->trans('Extrafield_expe_ok'), 'boolean', 100, '', 'commande', 0, 0, '', "", 1, '', 5, $langs->trans('ExtrafieldToolTip_expe_ok'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-        $extrafields->addExtraField('sync', $langs->trans('Extrafield_sync_contents'), 'boolean', 10, '', 'commande', 0, 0, '0', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_sync_contents'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_ref', $langs->trans('Extrafield_p_ref'), 'varchar', 100, 16, 'commande', 0, 0, '', "", 1, '', 5, $langs->trans('ExtrafieldToolTip_p_ref'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_state', $langs->trans('Extrafield_p_state'), 'sellist', 100, '', 'commande', 0, 0, '', "a:1:{s:7:\"options\";a:1:{s:36:\"ps_order_state:name:id_order_state::\";N;}}", 1, '', 5, $langs->trans('ExtrafieldToolTip_p_state'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('sync', $langs->trans('Extrafield_sync_contents'), 'boolean', 10, '', 'commande', 0, 0, '0', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_sync_contents'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
 		
 		// Commande ligne
-        $extrafields->addExtraField('fk_parent_pack', $langs->trans('Extrafield_fk_parent_pack'), 'int', 100, 10, 'commandedet', 0, 0, '', "", 1, '', 5, $langs->trans('ExtrafieldToolTip_fk_parent_pack'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-		
-		// Commande Fournisseur
-        $extrafields->addExtraField('recpt_ok', $langs->trans('Extrafield_recpt_ok'), 'boolean', 100, '', 'commande_fournisseur', 0, 0, '', "", 1, '', 5, $langs->trans('ExtrafieldToolTip_recpt_ok'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-		
+		$extrafields->addExtraField('fk_parent_pack', $langs->trans('Extrafield_fk_parent_pack'), 'int', 100, 10, 'commandedet', 0, 0, '', "", 1, '', 5, $langs->trans('ExtrafieldToolTip_fk_parent_pack'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+
 		// User
-        $extrafields->addExtraField('p_id_user', $langs->trans('Extrafield_p_id_user'), 'int', 100, 10, 'user', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_id_user'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-		
+		$extrafields->addExtraField('p_id_user', $langs->trans('Extrafield_p_id_user'), 'int', 100, 10, 'user', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_id_user'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+
 		// Permissions
 		$this->remove($options);
 

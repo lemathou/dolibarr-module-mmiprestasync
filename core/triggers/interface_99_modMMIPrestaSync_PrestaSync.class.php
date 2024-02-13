@@ -253,27 +253,19 @@ class InterfacePrestaSync extends DolibarrTriggers
 			
 			// Réceptions
 			//case 'RECEPTION_CREATE':
-			case 'RECEPTION_VALIDATE':
-			case 'RECEPTION_DELETE':
-			case 'RECEPTION_MODIFY':
-				//var_dump($object); //die();
-				if (!in_array($object->origin, ['commandeFournisseur', 'order_supplier']) || empty($object->origin_id))
-					break;
-				mmi_prestasync::commande_four_reception($object->origin_id);
-				break;
+			//case 'RECEPTION_VALIDATE':
+			//case 'RECEPTION_DELETE':
+			//case 'RECEPTION_MODIFY':
 				
 			// Supplier orders
 			//case 'ORDER_SUPPLIER_CREATE':
-			case 'ORDER_SUPPLIER_MODIFY':
-			case 'ORDER_SUPPLIER_VALIDATE':
-			case 'ORDER_SUPPLIER_APPROVE':
+			//case 'ORDER_SUPPLIER_MODIFY':
+			////case 'ORDER_SUPPLIER_VALIDATE':
+			//case 'ORDER_SUPPLIER_APPROVE':
 			//case 'ORDER_SUPPLIER_REFUSE':
 			//case 'ORDER_SUPPLIER_CANCEL':
 			//case 'ORDER_SUPPLIER_SENTBYMAIL':
-			case 'ORDER_SUPPLIER_DISPATCH':
-				//var_dump($object); die();
-				mmi_prestasync::commande_four_reception($object->id);
-				break;
+			//case 'ORDER_SUPPLIER_DISPATCH':
 			//case 'ORDER_SUPPLIER_DELETE':
 			//case 'LINEORDER_SUPPLIER_DISPATCH':
 			//case 'LINEORDER_SUPPLIER_CREATE':
@@ -421,20 +413,10 @@ class InterfacePrestaSync extends DolibarrTriggers
 			case 'SHIPPING_REOPEN':
 				//var_dump($object); die();
 				mmi_prestasync::ws_trigger('shipping', 'expedition', 'osync', $object->id);
-				
-				if (!in_array($object->origin, ['commande', 'order']) || empty($object->origin_id))
-					break;
-				
-				mmi_prestasync::commande_expedition($object->origin_id);
 				break;
 			case 'SHIPPING_DELETE':
 				//var_dump($object); die();
 				mmi_prestasync::ws_trigger('shipping', 'expedition', 'delete', $object->id);
-				
-				if (!in_array($object->origin, ['commande', 'order']) || empty($object->origin_id))
-					break;
-				
-				mmi_prestasync::commande_expedition($object->origin_id);
 				break;
 
 			// and more...

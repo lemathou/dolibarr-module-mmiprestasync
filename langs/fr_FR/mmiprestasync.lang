@@ -89,7 +89,6 @@ MyWidgetDescription = Description de mon widget
 # Champs supplémentaires
 #
 Extrafield_fk_parent_pack = Produit Pack parent
-Extrafield_garantie = Garantie
 Extrafield_longdescript = Description longue HTML
 Extrafield_p_active = Actif (Presta)
 Extrafield_p_decli_disabled = Déclinaison désactivée (Presta)
@@ -113,11 +112,10 @@ ExtrafieldToolTip_sync = Uniquement pour les produits créés sur Dolibarr que l
 Extrafield_p_image = Url Image (Presta)
 Extrafield_p_id_user = ID Utilisateur Prestashop
 ExtrafieldToolTip_p_id_user = Sert à la synchronisation des données d'un commercial
-Extrafield_recpt_ok = Reçu
-Extrafield_expe_ok = Expédié
 Extrafield_kit_unsync = Ne pas synchroniser le Kit côté Presta
 ExtrafieldToolTip_kit_unsync = Particulièrement utile si on est sur une déclinaison ou si on ne souhaite pas détailler le kit sur presta, qu'il soit vu comme un produit normal.
-Extrafield_fk_categorie = Catégorie principale (presta)
+Extrafield_p_fk_categorie = Catégorie principale (presta)
+ExtrafieldToolTip_p_fk_categorie = Ne pas confondre avec la catégorie par défaut pour la gestion des prix !
 
 #
 # Global
