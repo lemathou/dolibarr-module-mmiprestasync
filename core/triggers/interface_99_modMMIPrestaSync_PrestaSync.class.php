@@ -85,6 +85,9 @@ class InterfacePrestaSync extends DolibarrTriggers
 	 */
 	public function runTrigger($action, $object, User $user, Translate $langs, Conf $conf)
 	{
+		if (empty($conf->global->MMIPRESTASYNC))
+			return 0;
+
 		//var_dump($action); var_dump($object); die();
 		// You can isolate code for each action in a separate method: this method should be named like the trigger in camelCase.
 		// For example : COMPANY_CREATE => public function companyCreate($action, $object, User $user, Translate $langs, Conf $conf)
