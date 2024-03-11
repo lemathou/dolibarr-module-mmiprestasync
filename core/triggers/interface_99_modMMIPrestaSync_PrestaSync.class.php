@@ -158,7 +158,9 @@ class InterfacePrestaSync extends DolibarrTriggers
 			case 'PRODUCT_CREATE':
 			case 'PRODUCT_MODIFY':
 			case 'PRODUCT_PRICE_MODIFY':
-			case 'PRODUCT_SOUSPRODUIT':
+			case 'PRODUCT_SUBPRODUCT_ADD':
+			case 'PRODUCT_SUBPRODUCT_UPDATE':
+			case 'PRODUCT_SUBPRODUCT_DELETE':
 				//var_dump($object); die();
 				mmi_prestasync::ws_trigger('product', 'product', 'osync', $object->id);
 				break;
