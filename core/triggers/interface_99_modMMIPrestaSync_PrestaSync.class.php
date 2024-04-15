@@ -85,7 +85,7 @@ class InterfacePrestaSync extends DolibarrTriggers
 	 */
 	public function runTrigger($action, $object, User $user, Translate $langs, Conf $conf)
 	{
-		if (empty($conf->global->MMIPRESTASYNC))
+		if (empty($conf->global->MMIPRESTASYNC_SYNC))
 			return 0;
 
 		//var_dump($action); var_dump($object); die();
@@ -187,15 +187,17 @@ class InterfacePrestaSync extends DolibarrTriggers
 
 				//var_dump($this->db);
 				//var_dump($object); die();
+				$product_id = $object->product_id;
 
 				// product_stock
 				$sql = 'SELECT s.rowid
 					FROM `'.MAIN_DB_PREFIX.'product_stock` s
-					WHERE s.`fk_entrepot`='.$fk_entrepot.' AND s.`fk_product`='.$object->product_id;
+					WHERE s.`fk_entrepot`='.$fk_entrepot.' AND s.`fk_product`='.$product_id;
 				//echo $sql;
 				$q = $this->db->query($sql);
+				//var_dump(empty($q)); die();
 				foreach($q as $row) {
-					//var_dump($row); //die();
+					//var_dump($row); die();
 					mmi_prestasync::ws_trigger('stock', 'product_stock', 'osync', $row['rowid']);
 				}
 
@@ -203,7 +205,7 @@ class InterfacePrestaSync extends DolibarrTriggers
 				if (!empty($object->batch)) {
 					$sql = 'SELECT pl.rowid
 						FROM `'.MAIN_DB_PREFIX.'product_lot` pl
-						WHERE pl.`fk_product`='.$object->product_id.' AND pl.batch="'.$object->batch.'"';
+						WHERE pl.`fk_product`='.$product_id.' AND pl.batch="'.$object->batch.'"';
 					//echo $sql;
 					$q = $this->db->query($sql);
 					foreach($q as $row) {
@@ -213,7 +215,7 @@ class InterfacePrestaSync extends DolibarrTriggers
 				}
 
 				//die();
-				//mmi_prestasync::ws_trigger('product', 'product', 'osync', $object->product_id);
+				//mmi_prestasync::ws_trigger('product', 'product', 'osync', $product_id);
 				break;
 			
 			case 'SUPPLIER_PRODUCT_BUYPRICE_UPDATE':
