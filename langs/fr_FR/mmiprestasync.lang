@@ -64,13 +64,11 @@ MMIPrestaSyncArea = Synchronisation Prestashop/Dolibarr
 # Page d'administration
 #
 MMIPrestaSyncSetup = Configuration du module MMIPrestaSync
-Settings = Réglages
 MMIPrestaSyncSetupPage = Page de configuration du module MMIPrestaSync
 
 #
 # Page À propos
 #
-About = À propos
 MMIPrestaSyncAbout = À propos de MMIPrestaSync
 MMIPrestaSyncAboutPage = Page à propos de MMIPrestaSync
 
