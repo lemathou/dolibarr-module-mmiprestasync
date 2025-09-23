@@ -50,6 +50,7 @@ $arrayofparameters = array(
 	'MMIPRESTASYNC_INVOICE_SYNC'=>array('type'=>'yesno', 'enabled'=>1),
 	'MMIPRESTASYNC_PAYMENT_SYNC'=>array('type'=>'yesno', 'enabled'=>1),
 	'MMIPRESTASYNC_SHIPPING_SYNC'=>array('type'=>'yesno', 'enabled'=>1),
+	'MMIPRESTASYNC_COSTPRICE_UPDATE'=>array('type'=>'yesno', 'enabled'=>1),
 
 	// Spec
 	'MMIPRESTASYNC_FIELD_KIT_UNSYNC'=>array('type'=>'yesno', 'enabled'=>1),
