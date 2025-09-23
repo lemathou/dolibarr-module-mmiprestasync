@@ -52,6 +52,7 @@ MMIPRESTASYNC_ORDER_DETAIL_SYNC = Synchronisation Lignes de commandes
 MMIPRESTASYNC_SHIPPING_SYNC = Synchronisation Expéditions client
 MMIPRESTASYNC_INVOICE_SYNC = Synchronisation Factures et avoirs
 MMIPRESTASYNC_PAYMENT_SYNC = Synchronisation Réglements client
+MMIPRESTASYNC_COSTPRICE_UPDATE= Mise à jour des prix de reviens sur les devis au changement de cout de reviens (Appel API)
 
 MMIPRESTASYNC_FIELD_KIT_UNSYNC = Ajoute un champ Produit spécifier pour un kit sans synchro vers un kit presta (utile pour des déclinaisons, ou si on ne veut pas afficher le détail du kit)
 
