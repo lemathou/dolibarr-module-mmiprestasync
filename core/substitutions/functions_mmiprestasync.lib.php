@@ -4,12 +4,7 @@ require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
 require_once DOL_DOCUMENT_ROOT.'/societe/class/client.class.php';
 require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
 
-if (!function_exists('price_format')) {
-	function price_format($price)
-	{
-		return number_format(round($price, 2), 2, ',', ' ').' €';
-	}
-}
+dol_include_once('custom/mmicommon/class/mmi_prices.class.php');
 
 if (!function_exists('otf_entities')) {
 	function otf_entities($str)
@@ -169,7 +164,7 @@ function mmiprestasync_completesubstitutionarray(&$substitutionarray,$langs,$obj
 			if ($remaintopay>0) {
 				//var_dump($remaintopay); die();
 				$substitutionarray['reglement_aff'] = true;
-				$substitutionarray['paiements_aff'] = 'Reste à payer : '.price_format($remaintopay);
+				$substitutionarray['paiements_aff'] = 'Reste à payer : '.mmi_prices::price_format($remaintopay);
 			}
 			else {
 				$substitutionarray['paiements_aff'] = 'FACTURE ACQUITEE';
@@ -325,13 +320,13 @@ function mmiprestasync_completesubstitutionarray(&$substitutionarray,$langs,$obj
 	}
 
 	// Arrondi & mise en forme
-	$substitutionarray['object_total_ht'] = price_format($substitutionarray['object_total_ht']);
-	$substitutionarray['object_total_vat'] = price_format($substitutionarray['object_total_vat']);
-	$substitutionarray['object_total_ttc'] = price_format($substitutionarray['object_total_ttc']);
+	$substitutionarray['object_total_ht'] = mmi_prices::price_format($substitutionarray['object_total_ht']);
+	$substitutionarray['object_total_vat'] = mmi_prices::price_format($substitutionarray['object_total_vat']);
+	$substitutionarray['object_total_ttc'] = mmi_prices::price_format($substitutionarray['object_total_ttc']);
 	if (isset($substitutionarray['object_total_vat_20']))
-		$substitutionarray['object_total_vat2_20'] = price_format($substitutionarray['object_total_vat_20']);
+		$substitutionarray['object_total_vat2_20'] = mmi_prices::price_format($substitutionarray['object_total_vat_20']);
 	if (isset($substitutionarray['object_total_vat_5,5']))
-		$substitutionarray['object_total_vat2_5,5'] = price_format($substitutionarray['object_total_vat_5,5']);
+		$substitutionarray['object_total_vat2_5,5'] = mmi_prices::price_format($substitutionarray['object_total_vat_5,5']);
 
 	//var_dump($substitutionarray); var_dump($object); //die();
 }
@@ -416,16 +411,16 @@ function mmiprestasync_completesubstitutionarray_lines(&$substitutionarray,$lang
 			$substitutionarray['line_logo2'] = ($img ?$img_dir.'/'.$img :'');
 
 			// EcoTax
-			$substitutionarray['line_options_ecotaxdeee'] = ($substitutionarray['line_options_ecotaxdeee']>0 ?price_format($substitutionarray['line_options_ecotaxdeee']) :'');
+			$substitutionarray['line_options_ecotaxdeee'] = ($substitutionarray['line_options_ecotaxdeee']>0 ?mmi_prices::price_format($substitutionarray['line_options_ecotaxdeee']) :'');
 
 			// Arrondi & mise en forme
-			$substitutionarray['line_up_round'] = price_format($line->subprice);
+			$substitutionarray['line_up_round'] = mmi_prices::price_format($line->subprice);
 			if ($substitutionarray['line_qty']==0) {
 				$substitutionarray['line_qty'] = '';
 				$substitutionarray['line_price_ht'] = 'Option';
 			}
 			else {
-				$substitutionarray['line_price_ht'] = price_format($substitutionarray['line_price_ht']);
+				$substitutionarray['line_price_ht'] = mmi_prices::price_format($substitutionarray['line_price_ht']);
 			}
 
 			//var_dump($substitutionarray); var_dump($object); var_dump($line); var_dump($product); die();
@@ -468,13 +463,13 @@ function mmiprestasync_completesubstitutionarray_lines(&$substitutionarray,$lang
 			$substitutionarray['line_options_ecotaxdeee'] = '';
 
 			// Arrondi & mise en forme
-			$substitutionarray['line_up_round'] = price_format($line->subprice);
+			$substitutionarray['line_up_round'] = mmi_prices::price_format($line->subprice);
 			if ($substitutionarray['line_qty']==0) {
 				$substitutionarray['line_qty'] = '';
 				$substitutionarray['line_price_ht'] = 'Option';
 			}
 			else {
-				$substitutionarray['line_price_ht'] = price_format($substitutionarray['line_price_ht']);
+				$substitutionarray['line_price_ht'] = mmi_prices::price_format($substitutionarray['line_price_ht']);
 			}
 		}
 
