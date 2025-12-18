@@ -135,7 +135,7 @@ class modMMIPrestaSync extends DolibarrModules
 		$this->conflictwith = array(); // List of module class names as string this module is in conflict with. Example: array('modModuleToDisable1', ...)
 		$this->langfiles = array("mmiprestasync@mmiprestasync");
 		$this->phpmin = array(7, 2); // Minimum version of PHP required by module
-		$this->need_dolibarr_version = array(11, -3); // Minimum version of Dolibarr required by module
+		$this->need_dolibarr_version = array(19, 0); // Minimum version of Dolibarr required by module
 		$this->warnings_activation = array(); // Warning to show when we activate module. array('always'='text') or array('FR'='textfr','ES'='textes'...)
 		$this->warnings_activation_ext = array(); // Warning to show when we activate an external module. array('always'='text') or array('FR'='textfr','ES'='textes'...)
 		//$this->automatic_activation = array('FR'=>'mmiprestasyncWasAutomaticallyActivatedBecauseOfYourCountryChoice');
@@ -286,54 +286,9 @@ class modMMIPrestaSync extends DolibarrModules
 
 		// Exports profiles provided by this module
 		$r = 1;
-		/* BEGIN MODULEBUILDER EXPORT MYOBJECT */
-		/*
-		$langs->load("mmiprestasync@mmiprestasync");
-		$this->export_code[$r]=$this->rights_class.'_'.$r;
-		$this->export_label[$r]='MyObjectLines';	// Translation key (used only if key ExportDataset_xxx_z not found)
-		$this->export_icon[$r]='myobject@mmiprestasync';
-		// Define $this->export_fields_array, $this->export_TypeFields_array and $this->export_entities_array
-		$keyforclass = 'MyObject'; $keyforclassfile='/mmiprestasync/class/myobject.class.php'; $keyforelement='myobject@mmiprestasync';
-		include DOL_DOCUMENT_ROOT.'/core/commonfieldsinexport.inc.php';
-		//$this->export_fields_array[$r]['t.fieldtoadd']='FieldToAdd'; $this->export_TypeFields_array[$r]['t.fieldtoadd']='Text';
-		//unset($this->export_fields_array[$r]['t.fieldtoremove']);
-		//$keyforclass = 'MyObjectLine'; $keyforclassfile='/mmiprestasync/class/myobject.class.php'; $keyforelement='myobjectline@mmiprestasync'; $keyforalias='tl';
-		//include DOL_DOCUMENT_ROOT.'/core/commonfieldsinexport.inc.php';
-		$keyforselect='myobject'; $keyforaliasextra='extra'; $keyforelement='myobject@mmiprestasync';
-		include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
-		//$keyforselect='myobjectline'; $keyforaliasextra='extraline'; $keyforelement='myobjectline@mmiprestasync';
-		//include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
-		//$this->export_dependencies_array[$r] = array('myobjectline'=>array('tl.rowid','tl.ref')); // To force to activate one or several fields if we select some fields that need same (like to select a unique key if we ask a field of a child to avoid the DISTINCT to discard them, or for computed field than need several other fields)
-		//$this->export_special_array[$r] = array('t.field'=>'...');
-		//$this->export_examplevalues_array[$r] = array('t.field'=>'Example');
-		//$this->export_help_array[$r] = array('t.field'=>'FieldDescHelp');
-		$this->export_sql_start[$r]='SELECT DISTINCT ';
-		$this->export_sql_end[$r]  =' FROM '.MAIN_DB_PREFIX.'myobject as t';
-		//$this->export_sql_end[$r]  =' LEFT JOIN '.MAIN_DB_PREFIX.'myobject_line as tl ON tl.fk_myobject = t.rowid';
-		$this->export_sql_end[$r] .=' WHERE 1 = 1';
-		$this->export_sql_end[$r] .=' AND t.entity IN ('.getEntity('myobject').')';
-		$r++; */
-		/* END MODULEBUILDER EXPORT MYOBJECT */
 
 		// Imports profiles provided by this module
 		$r = 1;
-		/* BEGIN MODULEBUILDER IMPORT MYOBJECT */
-		/*
-		 $langs->load("mmiprestasync@mmiprestasync");
-		 $this->export_code[$r]=$this->rights_class.'_'.$r;
-		 $this->export_label[$r]='MyObjectLines';	// Translation key (used only if key ExportDataset_xxx_z not found)
-		 $this->export_icon[$r]='myobject@mmiprestasync';
-		 $keyforclass = 'MyObject'; $keyforclassfile='/mmiprestasync/class/myobject.class.php'; $keyforelement='myobject@mmiprestasync';
-		 include DOL_DOCUMENT_ROOT.'/core/commonfieldsinexport.inc.php';
-		 $keyforselect='myobject'; $keyforaliasextra='extra'; $keyforelement='myobject@mmiprestasync';
-		 include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
-		 //$this->export_dependencies_array[$r]=array('mysubobject'=>'ts.rowid', 't.myfield'=>array('t.myfield2','t.myfield3')); // To force to activate one or several fields if we select some fields that need same (like to select a unique key if we ask a field of a child to avoid the DISTINCT to discard them, or for computed field than need several other fields)
-		 $this->export_sql_start[$r]='SELECT DISTINCT ';
-		 $this->export_sql_end[$r]  =' FROM '.MAIN_DB_PREFIX.'myobject as t';
-		 $this->export_sql_end[$r] .=' WHERE 1 = 1';
-		 $this->export_sql_end[$r] .=' AND t.entity IN ('.getEntity('myobject').')';
-		 $r++; */
-		/* END MODULEBUILDER IMPORT MYOBJECT */
 	}
 
 	/**
@@ -361,14 +316,14 @@ class modMMIPrestaSync extends DolibarrModules
 		$extrafields->addExtraField('p_lastname', $langs->trans('Extrafield_p_lastname'), 'varchar', 1, 255, 'societe', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_lastname'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
 		$extrafields->addExtraField('p_firstname', $langs->trans('Extrafield_p_firstname'), 'varchar', 1, 255, 'societe', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_firstname'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
 		$extrafields->addExtraField('p_company', $langs->trans('Extrafield_p_company'), 'varchar', 1, 255, 'societe', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_company'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-		$extrafields->addExtraField('p_newslstter', $langs->trans('Extrafield_p_newslstter'), 'boolean', 1, 255, 'societe', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_newslstter'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-		$extrafields->addExtraField('p_optin', $langs->trans('Extrafield_p_optin'), 'boolean', 1, 255, 'societe', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_optin'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_newsletter', $langs->trans('Extrafield_p_newsletter'), 'boolean', 1, 255, 'societe', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_p_newsletter'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_optin', $langs->trans('Extrafield_p_optin'), 'boolean', 1, 255, 'societe', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_p_optin'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
 		
 		// Socpeople
-		$extrafields->addExtraField('p_alias', $langs->trans('Extrafield_p_alias'), 'varchar', 1, 255, 'socpeople', 0, 0, '', "", 1, '', 1, $langs->trans('ExtrafieldToolTip_p_alias'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-		$extrafields->addExtraField('p_address2', $langs->trans('Extrafield_p_address2'), 'varchar', 10, 255, 'socpeople', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_address2'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-		$extrafields->addExtraField('p_company', $langs->trans('Extrafield_p_company'), 'varchar', 10, 255, 'socpeople', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_company'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
-		$extrafields->addExtraField('p_deleted', $langs->trans('Extrafield_p_deleted'), 'boolean', 100, '', 'socpeople', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_deleted'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_alias', $langs->trans('Extrafield_p_alias'), 'varchar', 1, 255, 'socpeople', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_p_alias'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_address2', $langs->trans('Extrafield_p_address2'), 'varchar', 10, 255, 'socpeople', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_p_address2'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_company', $langs->trans('Extrafield_p_company'), 'varchar', 10, 255, 'socpeople', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_p_company'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_deleted', $langs->trans('Extrafield_p_deleted'), 'boolean', 100, '', 'socpeople', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_p_deleted'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
 		$extrafields->addExtraField('p_sync', $langs->trans('Extrafield_sync'), 'boolean', 10, '', 'socpeople', 0, 0, '', "", 1, '', -1, $langs->trans('ExtrafieldToolTip_sync'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
 		
 		// Product
@@ -403,40 +358,6 @@ class modMMIPrestaSync extends DolibarrModules
 			.' (entity, code, libelle, type, active, position)'
 			.' VALUES'
 			.' ('.$conf->entity.', "UNDEF", "Non défini", 2, 1, 0)';
-
-		// Document templates
-		$moduledir = 'mmiprestasync';
-		$myTmpObjects = array();
-		$myTmpObjects['MyObject']=array('includerefgeneration'=>0, 'includedocgeneration'=>0);
-
-		foreach ($myTmpObjects as $myTmpObjectKey => $myTmpObjectArray) {
-			if ($myTmpObjectKey == 'MyObject') continue;
-			if ($myTmpObjectArray['includerefgeneration']) {
-				$src=DOL_DOCUMENT_ROOT.'/install/doctemplates/mmiprestasync/template_myobjects.odt';
-				$dirodt=DOL_DATA_ROOT.'/doctemplates/mmiprestasync';
-				$dest=$dirodt.'/template_myobjects.odt';
-
-				if (file_exists($src) && ! file_exists($dest))
-				{
-					require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
-					dol_mkdir($dirodt);
-					$result=dol_copy($src, $dest, 0, 0);
-					if ($result < 0)
-					{
-						$langs->load("errors");
-						$this->error=$langs->trans('ErrorFailToCopyFile', $src, $dest);
-						return 0;
-					}
-				}
-
-				$sql = array_merge($sql, array(
-					"DELETE FROM ".MAIN_DB_PREFIX."document_model WHERE nom = 'standard_".strtolower($myTmpObjectKey)."' AND type = '".strtolower($myTmpObjectKey)."' AND entity = ".$conf->entity,
-					"INSERT INTO ".MAIN_DB_PREFIX."document_model (nom, type, entity) VALUES('standard_".strtolower($myTmpObjectKey)."','".strtolower($myTmpObjectKey)."',".$conf->entity.")",
-					"DELETE FROM ".MAIN_DB_PREFIX."document_model WHERE nom = 'generic_".strtolower($myTmpObjectKey)."_odt' AND type = '".strtolower($myTmpObjectKey)."' AND entity = ".$conf->entity,
-					"INSERT INTO ".MAIN_DB_PREFIX."document_model (nom, type, entity) VALUES('generic_".strtolower($myTmpObjectKey)."_odt', '".strtolower($myTmpObjectKey)."', ".$conf->entity.")"
-				));
-			}
-		}
 
 		return $this->_init($sql, $options);
 	}
