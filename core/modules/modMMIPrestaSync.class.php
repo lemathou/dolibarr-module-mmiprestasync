@@ -61,10 +61,10 @@ class modMMIPrestaSync extends DolibarrModules
 		$this->description = "Synchronisation Dolibarr/Prestashop";
 		// Used only if file README.md and README-LL.md not found.
 		$this->descriptionlong = "Synchronisation Dolibarr/Prestashop";
-		$this->editor_name = 'Mathieu Moulin iProspective';
-		$this->editor_url = 'https://www.iprospective.fr/';
+		$this->editor_name = 'Mathieu Moulin iProspective MMI';
+		$this->editor_url = 'https://iprospective.fr/';
 		// Possible values for version are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated' or a version string like 'x.y.z'
-		$this->version = '1.0.1';
+		$this->version = '1.1.0';
 		// Url to the file with your last numberversion of this module
 		//$this->url_last_version = 'http://www.example.com/versionmodule.txt';
 
@@ -134,7 +134,7 @@ class modMMIPrestaSync extends DolibarrModules
 		$this->requiredby = array(); // List of module class names as string to disable if this one is disabled. Example: array('modModuleToDisable1', ...)
 		$this->conflictwith = array(); // List of module class names as string this module is in conflict with. Example: array('modModuleToDisable1', ...)
 		$this->langfiles = array("mmiprestasync@mmiprestasync");
-		$this->phpmin = array(5, 5); // Minimum version of PHP required by module
+		$this->phpmin = array(7, 2); // Minimum version of PHP required by module
 		$this->need_dolibarr_version = array(11, -3); // Minimum version of Dolibarr required by module
 		$this->warnings_activation = array(); // Warning to show when we activate module. array('always'='text') or array('FR'='textfr','ES'='textes'...)
 		$this->warnings_activation_ext = array(); // Warning to show when we activate an external module. array('always'='text') or array('FR'='textfr','ES'='textes'...)
@@ -361,6 +361,8 @@ class modMMIPrestaSync extends DolibarrModules
 		$extrafields->addExtraField('p_lastname', $langs->trans('Extrafield_p_lastname'), 'varchar', 1, 255, 'societe', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_lastname'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
 		$extrafields->addExtraField('p_firstname', $langs->trans('Extrafield_p_firstname'), 'varchar', 1, 255, 'societe', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_firstname'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
 		$extrafields->addExtraField('p_company', $langs->trans('Extrafield_p_company'), 'varchar', 1, 255, 'societe', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_company'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_newslstter', $langs->trans('Extrafield_p_newslstter'), 'boolean', 1, 255, 'societe', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_newslstter'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
+		$extrafields->addExtraField('p_optin', $langs->trans('Extrafield_p_optin'), 'boolean', 1, 255, 'societe', 0, 0, '', "", 1, '', 3, $langs->trans('ExtrafieldToolTip_p_optin'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
 		
 		// Socpeople
 		$extrafields->addExtraField('p_alias', $langs->trans('Extrafield_p_alias'), 'varchar', 1, 255, 'socpeople', 0, 0, '', "", 1, '', 1, $langs->trans('ExtrafieldToolTip_p_alias'), '', $conf->entity, 'mmiprestasync@mmiprestasync', '$conf->mmiprestasync->enabled');
