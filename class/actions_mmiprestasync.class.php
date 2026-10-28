@@ -66,7 +66,7 @@ class ActionsMMIPrestaSync extends MMI_Actions_1_0
 			}
 
 			if (!empty($oid)) {
-				echo '<a class="butAction" href="/custom/mmiprestasync/ws2.php?type='.$type.'&otype='.$otype.'&oid='.$oid.'" onclick="MMI_PS_ajaxnotify(this.href); return false;">'.$langs->trans("MMIPrestaSynchronize").'</a>';
+				echo '<a class="butAction" href="/custom/mmiprestasync/ws2.php?type='.$type.'&otype='.$otype.'&oid='.$oid.'&token='.newToken().'" onclick="MMI_PS_ajaxnotify(this.href); return false;">'.$langs->trans("MMIPrestaSynchronize").'</a>';
 				echo '<script>
 					function MMI_PS_ajaxnotify(url)
 					{
