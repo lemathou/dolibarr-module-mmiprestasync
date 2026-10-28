@@ -121,8 +121,40 @@ public function _checkpost($name, $type, $nonempty=true)
 
 public function authenticate()
 {
-	//$_POST['passkey'];
-	//echo 'Authenticated OK';
+	// Secret partage avec le notificateur (constante MMIPRESTASYNC_WS_SYNC_PASS).
+	// Sans secret configure, on refuse : le webservice ne doit jamais etre ouvert.
+	$expected = '';
+
+	$sql = "SELECT value FROM `".static::$_db_prefix."const`
+		WHERE name='MMIPRESTASYNC_WS_SYNC_PASS' AND entity=1 LIMIT 1";
+	$q = static::$_db->query($sql);
+	if ($q && ($r = $q->fetch_row())) {
+		$expected = (string) $r[0];
+	}
+	else {
+		// Repli : certaines installations stockent la constante sur une autre entite.
+		$sql = "SELECT value FROM `".static::$_db_prefix."const`
+			WHERE name='MMIPRESTASYNC_WS_SYNC_PASS' ORDER BY entity LIMIT 1";
+		$q = static::$_db->query($sql);
+		if ($q && ($r = $q->fetch_row())) {
+			$expected = (string) $r[0];
+		}
+	}
+
+	$given = '';
+	if (isset($_POST['password']) && is_string($_POST['password'])) {
+		$given = $_POST['password'];
+	}
+	elseif (isset($_SERVER['HTTP_X_WS_PASSWORD']) && is_string($_SERVER['HTTP_X_WS_PASSWORD'])) {
+		$given = $_SERVER['HTTP_X_WS_PASSWORD'];
+	}
+
+	if ($expected === '' || $given === '' || !hash_equals($expected, $given)) {
+		http_response_code(403);
+		header('Content-Type: application/json');
+		die(json_encode(['error' => 'Need auth']));
+	}
+
 	return true;
 }
 

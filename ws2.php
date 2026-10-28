@@ -27,11 +27,21 @@ if (empty($user) || empty($user->id)) {
 	echo json_encode(['r'=>false, 'reason'=>'Not connected']);
 	die();
 }
-$permission = $user->rights->mmiprestasync->resync_button->all;
+$permission = !empty($user->rights->mmiprestasync->resync_button->all);
+if (!$permission) {
+	echo json_encode(['r'=>false, 'reason'=>'Permission denied']);
+	die();
+}
 
-$type = GETPOST('type');
-$otype = GETPOST('otype');
-$oid = GETPOST('oid');
+$token = GETPOST('token', 'alpha');
+if (empty($token) || !hash_equals((string) newToken(), (string) $token)) {
+	echo json_encode(['r'=>false, 'reason'=>'Invalid token']);
+	die();
+}
+
+$type = GETPOST('type', 'aZ09');
+$otype = GETPOST('otype', 'alpha');
+$oid = GETPOST('oid', 'int');
 
 if (empty($type) || empty($otype) || empty($oid)) {
 	echo json_encode(['r'=>false, 'reason'=>'Missing parameter']);
