@@ -114,13 +114,11 @@ function mmiprestasync_completesubstitutionarray(&$substitutionarray,$langs,$obj
 	if (!is_object($object))
 		return;
 	
-	//var_dump($object); die();
 	if (isset($conf->global->PAYMENTBYBANKTRANSFER_ID_BANKACCOUNT)) {
 		$bank = new Account($db);
 		$bank->fetch($conf->global->PAYMENTBYBANKTRANSFER_ID_BANKACCOUNT);
 		$substitutionarray['company_default_bank_iban'] = $bank->iban;
 		$substitutionarray['company_default_bank_bic'] = $bank->bic;
-		//var_dump($bank);
 	}
 	//PAYMENTBYBANKTRANSFER_ID_BANKACCOUNT
 
@@ -128,7 +126,6 @@ function mmiprestasync_completesubstitutionarray(&$substitutionarray,$langs,$obj
 	$substitutionarray['mycompany_eori'] = !empty($mysoc->idprof5) ?' / EORI '.$mysoc->idprof5 :'';
 
 	$object_type = get_class($object);
-	//var_dump($object_type); die();
 	if ($object_type=='Propal') {
 		$substitutionarray['object_type_uc'] = 'Devis';
 		$substitutionarray['object_type'] = 'devis';
@@ -151,18 +148,14 @@ function mmiprestasync_completesubstitutionarray(&$substitutionarray,$langs,$obj
 	$client = new Client($db);
 	$client->fetch($object->socid);
 
-	//var_dump(get_class($object)); die();
 	if (in_array($object_type, ['Commande', 'Propal', 'Expedition', 'Facture'])) {
 		$substitutionarray['object_delivery_date'] = $object->delivery_date;
 
 		// Affichage réglements
-		//var_dump($object); die();
 		$substitutionarray['signature_aff'] = $object_type == 'Propal' && empty($object->date_validation);
 		if ($object_type=='Facture') {
 			$remaintopay = $object->getRemainToPay();
-			//var_dump($remaintopay); die();
 			if ($remaintopay>0) {
-				//var_dump($remaintopay); die();
 				$substitutionarray['reglement_aff'] = true;
 				$substitutionarray['paiements_aff'] = 'Reste à payer : '.mmi_prices::price_format($remaintopay);
 			}
@@ -179,12 +172,10 @@ function mmiprestasync_completesubstitutionarray(&$substitutionarray,$langs,$obj
 		// Contacts internes associés
 		$contacts = $object->liste_contact(-1, 'internal');
 		foreach($contacts as $contact) {
-			//var_dump($contact);
 			// Contact suivi commande
 			if (in_array($contact['fk_c_type_contact'], [91, 31, 50, 140, 70])) {
 				$user = new User($db);
 				$user->fetch($contact['id']);
-				//var_dump($user); die();
 				foreach(['firstname', 'lastname', 'email'] as $i)
 					$substitutionarray['contact_suivi_'.$i] = $user->{$i};
 				$substitutionarray['contact_suivi_phone'] = $user->office_phone;
@@ -204,14 +195,12 @@ function mmiprestasync_completesubstitutionarray(&$substitutionarray,$langs,$obj
 		// Contacts externes associés
 		$contacts = $object->liste_contact();
 		foreach($contacts as $contact) {
-			//var_dump($contact);
 			// Adresse livraison
 			if (in_array($contact['fk_c_type_contact'], [102, 42, 61])) {
 				$adresse = new Contact($db);
 				$adresse->fetch($contact['id']);
 				foreach(['firstname', 'lastname', 'address', 'zip', 'town', 'country', 'email'] as $i)
 					$substitutionarray['contact_livr_'.$i] = $adresse->{$i};
-				//var_dump($adresse); die();
 				// Champs Complémentaires Contact/Adresse Prestashop
 				if (!empty($adresse->array_options['options_p_company']))
 					$substitutionarray['contact_livr_address'] = $adresse->array_options['options_p_company']."\r\n".$substitutionarray['contact_livr_address'];
@@ -223,7 +212,6 @@ function mmiprestasync_completesubstitutionarray(&$substitutionarray,$langs,$obj
 			elseif (in_array($contact['fk_c_type_contact'], [100, 40, 60])) {
 				$adresse = new Contact($db);
 				$adresse->fetch($contact['id']);
-				//var_dump($adresse); die();
 				foreach(['firstname', 'lastname', 'address', 'zip', 'town', 'country', 'country_code', 'email'] as $i)
 					$substitutionarray['contact_fact_'.$i] = $adresse->{$i};
 				// Champs Complémentaires Contact/Adresse Prestashop
@@ -267,7 +255,6 @@ function mmiprestasync_completesubstitutionarray(&$substitutionarray,$langs,$obj
 	$countries_eu = explode(',', !empty($conf->global->MAIN_COUNTRIES_IN_EEC) ?$conf->global->MAIN_COUNTRIES_IN_EEC :'AT,BE,BG,CY,CZ,DE,DK,EE,ES,FI,FR,GB,GR,HR,NL,HU,IE,IM,IT,LT,LU,LV,MC,MT,PL,PT,RO,SE,SK,SI,UK');
 	// Pas de TVA
 	if ($object->total_tva == 0) {
-		//var_dump($client);
 		// Transitaire
 		if (!empty($object->array_options['options_transitaire'])) {
 			$substitutionarray['reglement_tva_info'] = 'Exonération de TVA - Transitaire';
@@ -328,7 +315,6 @@ function mmiprestasync_completesubstitutionarray(&$substitutionarray,$langs,$obj
 	if (isset($substitutionarray['object_total_vat_5,5']))
 		$substitutionarray['object_total_vat2_5,5'] = mmi_prices::price_format($substitutionarray['object_total_vat_5,5']);
 
-	//var_dump($substitutionarray); var_dump($object); //die();
 }
 
 /** 		Function called to complete substitution array for lines (before generating on ODT, or a personalized email)
@@ -349,7 +335,6 @@ function mmiprestasync_completesubstitutionarray_lines(&$substitutionarray,$lang
 	$object_type = get_class($object);
 	$line_type = get_class($line);
 	//die($line_type);
-	//var_dump($line); //die();
 
 	if (in_array($line_type, ['OrderLine', 'PropaleLigne', 'ExpeditionLigne', 'FactureLigne'])) {
 
@@ -368,28 +353,22 @@ function mmiprestasync_completesubstitutionarray_lines(&$substitutionarray,$lang
 		// Produit
 		if ($line->fk_product) {
 			$substitutionarray['line_type_product'] = true;
-			//var_dump($line); die();
 			$product = new Product($db);
 			$result = $product->fetch($line->fk_product);
-			//var_dump($product);
 			
 			// Image produit
 			$img = '';
 			if (in_array($line_type, ['OrderLine', 'PropaleLigne', 'FactureLigne'])) {
 				$img_dir = $conf->product->dir_output.'/'.$line->ref;
-				//var_dump($img_dir);
 				if (is_dir($img_dir) && ($fp = opendir($img_dir))) {
 					while($filename=readdir($fp)) {
-						//var_dump($filename);
 						if (substr($filename, -4, 4)=='.jpg') {
 							$img = $filename;
 							break;
 						}
 					}
 				}
-				//var_dump($img);
 			}
-			//var_dump($conf); die();
 			
 			$substitutionarray['line_product_ref'] = $line->ref;
 			$substitutionarray['line_label_'] = !empty(trim(strip_tags($line->label))) ?otf_entities($line->label) :otf_entities($line->product_label);
@@ -423,16 +402,12 @@ function mmiprestasync_completesubstitutionarray_lines(&$substitutionarray,$lang
 				$substitutionarray['line_price_ht'] = mmi_prices::price_format($substitutionarray['line_price_ht']);
 			}
 
-			//var_dump($substitutionarray); var_dump($object); var_dump($line); var_dump($product); die();
-			//var_dump($object); var_dump($line); var_dump($product); die();
 		}
 
 		// Prix unitaire OK
 		elseif ($line->subprice!=0) {
 			$substitutionarray['line_type_product'] = true;
-			//var_dump($line); die();
 			$substitutionarray['line_product_ref'] = '';
-			//var_dump($line);
 			if (!empty($line->fk_remise_except) && $line->desc=='(DEPOSIT)') {
 				$label = 'Acompte';
 				$sql = 'SELECT f.ref, f.datef
@@ -475,15 +450,12 @@ function mmiprestasync_completesubstitutionarray_lines(&$substitutionarray,$lang
 
 		// Jalon
 		elseif ($line->label) {
-			//var_dump($line->label); var_dump(otf_entities($line->label)); die();
 			$substitutionarray['line_type_product'] = false;
 			$substitutionarray['line_type_jalon'] = true;
-			//var_dump($line); die();
 			$substitutionarray['line_product_ref'] = '';
 			$substitutionarray['line_label_'] = '<span style="color:#007eff;font-size:12pt"><strong>'.otf_entities($line->label).'</strong></span>';
 			$substitutionarray['line_desc_'] = otf_entity_decode($line->desc);
 			$substitutionarray['line_labeldesc_'] = $substitutionarray['line_label_'].($substitutionarray['line_desc_'] ?'<br />'.$substitutionarray['line_desc_'] :'');
-			//var_dump($substitutionarray['line_labeldesc_']);
 			$substitutionarray['line_product_barcode'] = '';
 
 			$substitutionarray['line_logo'] = '';
@@ -496,14 +468,12 @@ function mmiprestasync_completesubstitutionarray_lines(&$substitutionarray,$lang
 			$substitutionarray['line_qty'] = '';
 			$substitutionarray['line_vatrate'] = '';
 
-			//var_dump($substitutionarray); //die();
 		}
 
 		// Commentaire
 		else {
 			$substitutionarray['line_type_product'] = false;
 			$substitutionarray['line_type_jalon'] = false;
-			//var_dump($line); die();
 			$substitutionarray['line_product_ref'] = '';
 			$substitutionarray['line_label_'] = '';
 			$substitutionarray['line_desc_'] = otf_entity_decode($line->desc);
@@ -520,11 +490,8 @@ function mmiprestasync_completesubstitutionarray_lines(&$substitutionarray,$lang
 			$substitutionarray['line_qty'] = '';
 			$substitutionarray['line_vatrate'] = '';
 
-			//var_dump($substitutionarray); //die();
 		}
 	}
-	//var_dump($substitutionarray);
-	//var_dump($object); var_dump($line); var_dump($product); //die();
 }
 
 $otf_char_list = [

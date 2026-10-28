@@ -105,10 +105,7 @@ class ActionsMMIPrestaSync extends MMI_Actions_1_0
 		$error = 0; // Error counter
 		$myvalue = 'test'; // A result value
 
-		//var_dump($parameters['context']); die();
-		//print_r($parameters); die();
 		//echo "action: " . $action;
-		//print_r($object);
 
 		if (in_array('pdfgeneration', explode(':', $parameters['context'])))
 		{
@@ -119,8 +116,6 @@ class ActionsMMIPrestaSync extends MMI_Actions_1_0
 		{
 			$this->results = array('myreturn' => $myvalue);
 			$this->resprints = 'A text to show';
-			//var_dump($object); die();
-			//var_dump($object->array_options); die();
 
 			if (!empty($object->array_options['options_fk_entrepot'])) {
 				require_once DOL_DOCUMENT_ROOT.'/product/stock/class/entrepot.class.php';
@@ -143,8 +138,6 @@ class ActionsMMIPrestaSync extends MMI_Actions_1_0
 					.'<p>Tél pro: '.$adresse->phone_pro.' / mobile: '.$adresse->phone_mobile.'</p>'
 					.'<p>Email: '.$adresse->email.'</p>';
 			}
-			//var_dump($adresse); die();
-			//var_dump($object->note_public); die();
 
 			return 0; // or return 1 to replace standard code
 		}

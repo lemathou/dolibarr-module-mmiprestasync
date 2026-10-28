@@ -104,7 +104,6 @@ protected static function __setparams()
 
 	$instance = static::$_instance;
 	foreach (static::PARAMETERS as $name=>$param) {
-		//var_dump(static::PARAMETERS_PREFIX.strtoupper($name), Configuration::get(static::PARAMETERS_PREFIX.strtoupper($name)));
 		$instance->setparam($name, $conf->global->{static::PARAMETERS_PREFIX.strtoupper($name)});
 	}
 }
@@ -128,7 +127,6 @@ public function setparam($name, $value)
 
 public function add($action, $type, $ref, $params=null)
 {
-	//var_dump($action, $type, $ref, $params);
 	if (!isset($this->l[$action]))
 		$this->l[$action] = [];
 	
@@ -143,7 +141,6 @@ public function add($action, $type, $ref, $params=null)
 public function execute()
 {
 	//trigger_error("mmi_notification::execute()");
-	//var_dump($this->l); die();
 	// Boucle actions
 	foreach($this->l as $action=>$list) {
 		if (empty($list))
@@ -164,14 +161,12 @@ public function execute()
 public function sql_execute($type, $details)
 {
     echo '<p>Execute SQL :</p>';
-	//var_dump($type); var_dump($details);
     // execution requête
 }
 
 public function email_execute($type, $details)
 {
     echo '<p>Execute Email :</p>';
-    //var_dump($type); var_dump($details);
 }
 
 public function sync_add($type, $params)
@@ -199,18 +194,15 @@ public function sync_executes($list)
 public function sync_execute($type, $details)
 {
     //echo '<p>Execute Sync :</p>';
-    //var_dump($type); //var_dump($details);
     
     foreach($details as $ref=>$params) {
     	//echo '<p>Sync object</p>';
-		//var_dump($ref); var_dump($params); var_dump($type.'/'.$params['action']); var_dump(['sens'=>static::WS_SYNC_SENS, 'otype'=>$params['otype'], 'oid'=>$params['oid']]);
 	    $ts = date('Y-m-d H:i:s', time());
 		
 		// bonne url :
 		//$r = $this->ws_sync_url($type.'/'.$params['action'], ['sens'=>static::WS_SYNC_SENS, 'otype'=>$params['otype'], 'oid'=>$params['oid']]);
 		$r = $this->ws_sync_url('sync.php', ['type'=>$type, 'action'=>$params['action'], 'sens'=>static::WS_SYNC_SENS, 'otype'=>$params['otype'], 'oid'=>$params['oid'], 'ts'=>$ts]);
 		
-		//var_dump($r);
 	}
 }
 
@@ -226,7 +218,6 @@ public function ws_sync_url($url, $post=[])
 		return;
 	
 	$url = $this->params['WS_SYNC_URL'].'/'.$url;
-	//var_dump($url); var_dump($post); //die();
 	
 	$timeout = 30;
 	$ch = curl_init($url); // initialize curl with given url
