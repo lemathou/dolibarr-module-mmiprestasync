@@ -124,7 +124,6 @@ function lmiprestasyncProductBatchSync($r)
 	];
 	
 	echo '<p>'.$r['numero_lot'].'</p>';
-	//var_dump($r);
 	
 	// Rechercher/créer Produit
 	$o_p = new Product($db);
@@ -154,7 +153,6 @@ function lmiprestasyncProductBatchSync($r)
 	if (!empty($batchinfo)) {
 		// Mise à jour ?
 		echo '<p>Found product_batch</p>';
-		var_dump($batchinfo);
 		return;
 	}
 	// Stockage du lot à créer
@@ -174,7 +172,7 @@ function lmiprestasyncProductBatchSync($r)
 				(NOW(), '.$fk_product.', '.$fk_entrepot.', '.$r['stock'].')';
 			if ( !($q = $db->query($sql))) {
 				echo '<p>ERROR Inserting product_stock</p>';
-				var_dump($sql);
+				dol_syslog(__FUNCTION__.' : '.$db->lasterror(), LOG_ERR);
 				return;
 			}
 			else {
@@ -191,16 +189,4 @@ function lmiprestasyncProductBatchSync($r)
 	}
 	
 	return $s;
-}
-
-/**
- * Create Product_lot
- *
- * @return array
- */
-function lmiprestasyncProductBatchCreate($r)
-{
-	global $conf, $user, $db, $db2;
-	
-	var_dump($r);
 }

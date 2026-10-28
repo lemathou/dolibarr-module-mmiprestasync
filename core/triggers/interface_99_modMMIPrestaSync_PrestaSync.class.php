@@ -88,11 +88,9 @@ class InterfacePrestaSync extends DolibarrTriggers
 		if (empty($conf->global->MMIPRESTASYNC_SYNC))
 			return 0;
 
-		//var_dump($action); var_dump($object); die();
 		// You can isolate code for each action in a separate method: this method should be named like the trigger in camelCase.
 		// For example : COMPANY_CREATE => public function companyCreate($action, $object, User $user, Translate $langs, Conf $conf)
 		$methodName = lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', strtolower($action)))));
-		//var_dump($action); echo '<p>'.$methodName.'</p>'; //die();
 		//die();
 		$callback = array($this, $methodName);
 		if (is_callable($callback)) {
@@ -103,7 +101,6 @@ class InterfacePrestaSync extends DolibarrTriggers
 			return call_user_func($callback, $action, $object, $user, $langs, $conf);
 		};
 		
-		//var_dump('<p>MMI_DEBUG 	ACTION: '.$action); die();
 
 		// Or you can execute some code here
 		switch ($action) {
@@ -128,8 +125,6 @@ class InterfacePrestaSync extends DolibarrTriggers
 			case 'COMPANY_CREATE':
 			case 'COMPANY_MODIFY':
 				// @var $object Societe
-				//var_dump($object); //die();
-				//var_dump($object->client); die();
 				if ($object->fournisseur || $object->client)
 					mmi_prestasync::ws_trigger('customer', 'societe', 'osync', $object->id);
 				break;
@@ -138,21 +133,17 @@ class InterfacePrestaSync extends DolibarrTriggers
 			// Contacts
 			case 'CONTACT_CREATE':
 			case 'CONTACT_MODIFY':
-				//var_dump($object); die();
 				$sql = 'SELECT s.rowid, s2.fournisseur, s2.client
 					FROM `'.MAIN_DB_PREFIX.'socpeople` s
 					INNER JOIN `'.MAIN_DB_PREFIX.'societe` s2 ON s2.rowid=s.fk_soc
 					WHERE s.`rowid`='.$object->id;
 				//echo $sql; //die();
 				$q = $this->db->query($sql);
-				//var_dump($q); //die();
 				foreach($q as $row) {
-					//var_dump($row); //die();
 					if ($row['fournisseur'] || $row['client'])
 						mmi_prestasync::ws_trigger('address', 'socpeople', 'osync', $row['rowid']);
 					//die();
 				}
-				//var_dump($object); die();
 				break;
 			//case 'CONTACT_DELETE':
 			//case 'CONTACT_ENABLEDISABLE':
@@ -164,18 +155,15 @@ class InterfacePrestaSync extends DolibarrTriggers
 			case 'PRODUCT_SUBPRODUCT_ADD':
 			case 'PRODUCT_SUBPRODUCT_UPDATE':
 			case 'PRODUCT_SUBPRODUCT_DELETE':
-				//var_dump($object); die();
 				mmi_prestasync::ws_trigger('product', 'product', 'osync', $object->id);
 				break;
 			case 'PRODUCT_DELETE':
-				//var_dump($object); //die();
 				mmi_prestasync::ws_trigger('product', 'product', 'delete', $object->id);
 			//case 'PRODUCT_SET_MULTILANGS':
 			//case 'PRODUCT_DEL_MULTILANGS':
 
 			case 'PRODUCTLOT_CREATE':
 			case 'PRODUCTLOT_MODIFY':
-				//var_dump($object); die();
 				mmi_prestasync::ws_trigger('product_lot', 'product_lot', 'osync', $object->id);
 				break;
 
@@ -185,8 +173,6 @@ class InterfacePrestaSync extends DolibarrTriggers
 				// Dépôt où a eu lieu le mouvement
 				$fk_entrepot = $object->warehouse_id;
 
-				//var_dump($this->db);
-				//var_dump($object); die();
 				$product_id = $object->product_id;
 
 				// product_stock
@@ -195,9 +181,7 @@ class InterfacePrestaSync extends DolibarrTriggers
 					WHERE s.`fk_entrepot`='.$fk_entrepot.' AND s.`fk_product`='.$product_id;
 				//echo $sql;
 				$q = $this->db->query($sql);
-				//var_dump(empty($q)); die();
 				foreach($q as $row) {
-					//var_dump($row); die();
 					mmi_prestasync::ws_trigger('stock', 'product_stock', 'osync', $row['rowid']);
 				}
 
@@ -209,7 +193,6 @@ class InterfacePrestaSync extends DolibarrTriggers
 					//echo $sql;
 					$q = $this->db->query($sql);
 					foreach($q as $row) {
-						//var_dump($row); die();
 						mmi_prestasync::ws_trigger('product_lot', 'product_lot', 'osync', $row['rowid']);
 					}
 				}
@@ -218,9 +201,7 @@ class InterfacePrestaSync extends DolibarrTriggers
 				//mmi_prestasync::ws_trigger('product', 'product', 'osync', $product_id);
 				break;
 			
-			case 'SUPPLIER_PRODUCT_BUYPRICE_UPDATE':
 			case 'SUPPLIER_PRODUCT_BUYPRICE_MODIFY':
-				//var_dump($object->product_fourn_price_id); var_dump($object); die('grrr');
 				// @todo buyprice !
 				mmi_prestasync::ws_trigger('supplier_price', 'product_fournisseur_price', 'osync', $object->product_fourn_price_id);
 				break;
@@ -238,22 +219,18 @@ class InterfacePrestaSync extends DolibarrTriggers
 			case 'ORDER_SENTBYMAIL':
 			case 'ORDER_CLASSIFY_BILLED':
 			case 'ORDER_SETDRAFT':
-				//var_dump($object); die();
 				mmi_prestasync::ws_trigger('order', 'commande', 'osync', $object->id);
 				break;
 			case 'ORDER_DELETE':
-				//var_dump($object); die();
 				mmi_prestasync::ws_trigger('order', 'commande', 'delete', $object->id);
 				break;
 			
 			case 'LINEORDER_INSERT':
 			case 'LINEORDER_UPDATE':
-				//var_dump($object); die();
 				mmi_prestasync::ws_trigger('order_detail', 'commandedet', 'osync', $object->id);
 				mmi_prestasync::ws_trigger('order', 'commande', 'osync', $object->fk_commande);
 				break;
 			case 'LINEORDER_DELETE':
-				//var_dump($object); die();
 				mmi_prestasync::ws_trigger('order_detail', 'commandedet', 'delete', $object->id);
 				mmi_prestasync::ws_trigger('order', 'commande', 'osync', $object->fk_commande);
 				break;
@@ -322,11 +299,9 @@ class InterfacePrestaSync extends DolibarrTriggers
 			//case 'BILL_SENTBYMAIL':
 			//case 'BILL_CANCEL':
 			//case 'BILL_PAYED':
-				//var_dump($object); die();
 				//mmi_prestasync::ws_trigger('invoice', 'facture', 'osync', $object->id);
 				break;
 			case 'BILL_DELETE':
-				//var_dump($object); die();
 				//mmi_prestasync::ws_trigger('invoice', 'facture', 'osync', $object->id);
 				break;
 			
@@ -348,13 +323,11 @@ class InterfacePrestaSync extends DolibarrTriggers
 
 			// Payments
 			case 'PAYMENT_CUSTOMER_CREATE':
-				//var_dump($object); die();
 				//mmi_prestasync::ws_trigger('payment', 'paiement', 'osync', $object->id);
 				break;
 			//case 'PAYMENT_SUPPLIER_CREATE':
 			//case 'PAYMENT_ADD_TO_BANK':
 			case 'PAYMENT_DELETE':
-				//var_dump($object); die();
 				//mmi_prestasync::ws_trigger('payment', 'paiement', 'delete', $object->id);
 				break;
 
@@ -418,11 +391,9 @@ class InterfacePrestaSync extends DolibarrTriggers
 			case 'SHIPPING_BILLED':
 			case 'SHIPPING_CLOSED':
 			case 'SHIPPING_REOPEN':
-				//var_dump($object); die();
 				mmi_prestasync::ws_trigger('shipping', 'expedition', 'osync', $object->id);
 				break;
 			case 'SHIPPING_DELETE':
-				//var_dump($object); die();
 				mmi_prestasync::ws_trigger('shipping', 'expedition', 'delete', $object->id);
 				break;
 

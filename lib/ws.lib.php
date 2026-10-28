@@ -220,7 +220,6 @@ public function update_action()
 {
 	$list = static::_checkpost('list', 'array');
 	
-	var_dump($list);
 }
 
 // Vérif existence objet
@@ -365,7 +364,6 @@ public static function _get_data_tree($map, $tablename, $params)
 	
 	if ($map['join_type']=='row') {
 		//echo '<p>'.$tablename.'</p>';
-		//var_dump(array_keys(static::${'_'.$type.'t'}));
 		$row = static::_table_get($map, $tablename, $params);
 		return static::_get_data_tree_sub($map, $datainit, $row);
 	}
@@ -395,28 +393,21 @@ public static function _get_data_tree_sub($map, $data, $row)
 	if (!empty($table['pk'])) {
 		if (DEBUG_SYNCHRO) {
 			echo '<p>_get_data_tree_sub : '.$tablename.'</p>';
-			var_dump($table['pk']);
-			var_dump($data['params']);
 		}
 
 		if (is_array($table['pk'])) foreach($table['pk'] as $fieldname) {
 			if (!empty($row[$fieldname])) {
-				//var_dump($fieldname);
-				//var_dump($row[$fieldname]);
 				if (is_array($data['params']))
 					$data['params'][$fieldname] = $row[$fieldname];
 			}
 		}
 		elseif(is_string($fieldname=$table['pk'])) {
 			if (!empty($row[$fieldname])) {
-				//var_dump($fieldname);
-				//var_dump($row[$fieldname]);
 				if (is_array($data['params']))
 					$data['params'][$fieldname] = $row[$fieldname];
 			}
 		}
 	}
-	//var_dump($data); die();
 
 	// récursion enfants
 	if (!is_null($row) && !empty($map['children'])) foreach($map['children'] as $tname=>$t) {
@@ -437,10 +428,8 @@ public static function _get_data_tree_sub($map, $data, $row)
 
 public static function _table_get($map, $tablename, $params)
 {
-	//var_dump($map); die();
 	$map_id = $map['map_id'];
 	$table = array_merge(static::$_tables[$tablename], static::$_maps[$map_id][$tablename]);
-	//var_dump($table); die();
 	
 	if (isset($table['pk']) && is_numeric($params)) {
 		$id = $params;
@@ -460,7 +449,6 @@ public static function _table_get($map, $tablename, $params)
 	// Renvoi row ou liste
 	if ($table['get']=='row') {
 		if ($row = $q->fetch_assoc()) {
-			//var_dump($row);
 			return $row;
 		}
 	}

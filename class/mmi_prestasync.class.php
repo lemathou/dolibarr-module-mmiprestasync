@@ -34,7 +34,6 @@ class mmi_prestasync
 		global $conf;
 
 		foreach(static::$_sync as $name=>&$value) {
-			//var_dump($name, $value, $conf->global->{static::PARAMETERS_PREFIX.strtoupper($name).'_SYNC'});
 			if (isset($conf->global->{static::PARAMETERS_PREFIX.strtoupper($name).'_SYNC'}))
 				$value = $conf->global->{static::PARAMETERS_PREFIX.strtoupper($name).'_SYNC'};
 		}
@@ -68,7 +67,6 @@ class mmi_prestasync
 	public static function ws_trigger($type, $otype, $action, $id)
 	{
 		$notification = static::_notification();
-		//var_dump($type); var_dump(static::_sync($type, $action)); die();
 		if (! static::_sync($type, $action))
 			return false;
 

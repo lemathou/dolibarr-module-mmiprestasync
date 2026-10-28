@@ -80,7 +80,6 @@ function lmiprestasyncProductLotSync($r)
 	];
 	
 	echo '<p>'.$r['numero_lot'].'</p>';
-	//var_dump($r);
 	
 	// Rechercher/créer Produit
 	$o_p = new Product($db);
@@ -128,7 +127,6 @@ function lmiprestasyncProductLotSync($r)
 		$o->create($user);
 	}
 	
-	//var_dump($o);
 	return $s;
 }
 
@@ -137,9 +135,3 @@ function lmiprestasyncProductLotSync($r)
  *
  * @return array
  */
-function lmiprestasyncProductLotCreate($r)
-{
-	global $conf, $user, $db, $db2;
-	
-	var_dump($r);
-}
