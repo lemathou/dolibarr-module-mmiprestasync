@@ -177,7 +177,7 @@ public function sync_add($type, $params)
 	global $user;
 	$user_id = !empty($user) ?$user->id :'NULL';
 	
-	$sql = 'INSERT INTO `_sync` (`user_id`, `type`, `t_name`, `t_oid`, `action`) VALUES ('.$user_id.', "'.$type.'", "'.$params['otype'].'", "'.$params['oid'].'", "'.$params['action'].'")';
+	$sql = 'INSERT INTO `_sync` (`user_id`, `type`, `t_name`, `t_oid`, `action`) VALUES ('.$user_id.', "'.$this->db->real_escape_string($type).'", "'.$this->db->real_escape_string($params['otype']).'", "'.$this->db->real_escape_string($params['oid']).'", "'.$this->db->real_escape_string($params['action']).'")';
 	$r = $this->db->query($sql);
 }
 public function sync_executes($list)
@@ -225,7 +225,7 @@ public function ws_sync_url($url, $post=[])
 	curl_setopt($ch, CURLOPT_USERAGENT, static::WS_SYNC_AGENT);
 	//curl_setopt($ch, CURLOPT_TIMEOUT_MS, 250);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // write the response to a variable
-	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // follow redirects if any
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false); // follow redirects if any
 	//curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout); // max. seconds to execute
 	//curl_setopt($ch, CURLOPT_FAILONERROR, 1); // stop when it encounters an error
 	curl_setopt($ch, CURLOPT_POST, true);
