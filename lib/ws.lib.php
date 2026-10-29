@@ -300,7 +300,7 @@ public function exists_ref_action()
 	
 	$sql = 'SELECT 1
 		FROM `'.static::$_db_prefix.$tablename.'`
-		WHERE `'.$table['ref'].'`="'.addslashes($ref).'"';
+		WHERE `'.$table['ref'].'`="'.static::$_db->real_escape_string($ref).'"';
 	//trigger_error($sql);
 	$q = static::$_db->query($sql);
 	$data = ['return'=>($q->fetch_row() ?1 :0)];
