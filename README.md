@@ -1,86 +1,108 @@
-# MMIPRESTASYNC FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
+# MMIPrestaSync — Synchronisation PrestaShop ↔ Dolibarr : web service, files d'attente et résilience.
 
-## Features
+> Module Dolibarr **MMIPrestaSync** (version 1.1.0), branche `20.0`.
 
-Description...
+## Fonctionnalités
 
-<!--
-![Screenshot mmiprestasync](img/screenshot_mmiprestasync.png?raw=true "MMIPrestaSync"){imgmd}
--->
+### Fonctionnalités principales
 
-Other modules are available on [Dolistore.com](https://www.dolistore.com).
+- Synchronisation produits, clients, adresses, commandes, factures, paiements et stocks.
+- Web service `ws.php` authentifié par secret partagé (`MMIPRESTASYNC_WS_SYNC_PASS`, déchiffrement `dolcrypt`) et `ws2.php` pour les resynchronisations manuelles.
+- File de synchro (`_sync`), notificateur PrestaShop, triggers et API.
+- Configuration : URL PrestaShop/web service, types d'objets synchronisés, résilience.
 
-## Translations
+### Pages
 
-Translations can be define manually by editing files into directories *langs*.
+- `admin/about.php`
+- `admin/myobject_extrafields.php`
+- `admin/setup.php`
+- `ws.php`
+- `ws2.php`
 
-<!--
-This module contains also a sample configuration for Transifex, under the hidden directory [.tx](.tx), so it is possible to manage translation using this service.
+### Permissions
 
-For more informations, see the [translator's documentation](https://wiki.dolibarr.org/index.php/Translator_documentation).
+- `mmiprestasync.resync_button.all` — Resynchroniser manuellement
 
-There is a [Transifex project](https://transifex.com/projects/p/dolibarr-module-template) for this module.
--->
+### Configuration
 
-<!--
+| Constante | Type | Rôle |
+|---|---|---|
+| `MMIPRESTASYNC_PS_URL` | string | Prestashop URL |
+| `MMIPRESTASYNC_WS_SYNC_URL` | string | Prestashop Webservice Sync URL |
+| `MMIPRESTASYNC_WS_SYNC_PASS` | securekey | Prestashop Webservice Sync Key/Pass |
+| `MMIPRESTASYNC_SYNC` | yesno | Synchronisation active |
+| `MMIPRESTASYNC_CUSTOMER_SYNC` | yesno | Synchronisation Clients |
+| `MMIPRESTASYNC_SUPPLIER_SYNC` | yesno | Synchronisation Fournisseurs |
+| `MMIPRESTASYNC_ADDRESS_SYNC` | yesno | Synchronisation Afdresses client |
+| `MMIPRESTASYNC_PRODUCT_SYNC` | yesno | Synchronisation des produits |
+| `MMIPRESTASYNC_PRODUCT_LOT_SYNC` | yesno | Synchronisation des lots produit |
+| `MMIPRESTASYNC_SUPPLIER_PRICE_SYNC` | yesno | Synchronisation des Prix Fournisseurs |
+| `MMIPRESTASYNC_STOCK_SYNC` | string | Synchronisation du stock |
+| `MMIPRESTASYNC_ENTREPOT_IDS` | string | Entrepot(s) Dolibarr à synchroniser (IDs) |
+| `MMIPRESTASYNC_ORDER_SYNC` | yesno | Synchronisation Commandes |
+| `MMIPRESTASYNC_ORDER_DETAIL_SYNC` | yesno | Synchronisation Lignes de commandes |
+| `MMIPRESTASYNC_INVOICE_SYNC` | yesno | Synchronisation Factures et avoirs |
+| `MMIPRESTASYNC_PAYMENT_SYNC` | yesno | Synchronisation Réglements client |
+| `MMIPRESTASYNC_SHIPPING_SYNC` | yesno | Synchronisation Expéditions client |
+| `MMIPRESTASYNC_COSTPRICE_UPDATE` | yesno | Mise à jour des prix de reviens sur les devis au changement de cout de reviens (Appel API) |
+| `MMIPRESTASYNC_FIELD_KIT_UNSYNC` | yesno | Ajoute un champ Produit spécifier pour un kit sans synchro vers un kit presta (utile pour des déclinaisons, ou si on ne veut pas afficher le détail du kit) |
+
+### Modèles de documents
+
+- `core/modules/mmiprestasync/doc/doc_generic_myobject_odt.modules.php`
+- `core/modules/mmiprestasync/doc/pdf_standard_myobject.modules.php`
+- `core/modules/mmiprestasync/mod_myobject_advanced.php`
+- `core/modules/mmiprestasync/mod_myobject_standard.php`
+- `core/modules/mmiprestasync/modules_myobject.php`
+
+### Hooks
+
+- Contextes : `pdfgeneration`, `ordercard`, `productcard`, `productlotcard`, `stockproductcard`, `pricesuppliercard`, `thirdpartysupplier`, `thirdpartycomm`, `contactcard`
+- Callbacks : `MMI_PS_ajaxnotify`, `beforePDFCreation`
+
+### Triggers
+
+- `core/triggers/interface_99_modMMIPrestaSync_PrestaSync.class.php`
+
+### Classes et composants
+
+- `class/actions_mmiprestasync.class.php`
+- `class/api_mmiprestasync.class.php`
+- `class/mmi_notification.class.php`
+- `class/mmi_prestasync.class.php`
+- `lib/expe.lib.php`
+- `lib/invoice.lib.php`
+- `lib/mmiprestasync.lib.php`
+- `lib/order.lib.php`
+- `lib/payment.lib.php`
+- `lib/product.lib.php`
+- `lib/product_lot.lib.php`
+- `lib/propal.lib.php`
+- `lib/stock.lib.php`
+- `lib/tiers.lib.php`
+- `lib/ws.lib.php`
+
+## Prérequis
+
+- Dolibarr >= 19.0 (branche `20.0` : Dolibarr 20.0).
+- Modules MMI : `mmicommon`, `mmiproduct`, `mmifournisseurprice`, `mmipayments`, `mmiworkflow`. **`mmicommon` doit être activé en premier.**
 
 ## Installation
 
-### From the ZIP file and GUI interface
+1. Copier le module dans `htdocs/custom/mmiprestasync` :
 
-- If you get the module in a zip file (like when downloading it from the market place [Dolistore](https://www.dolistore.com)), go into
-menu ```Home - Setup - Modules - Deploy external module``` and upload the zip file.
+   ```sh
+   cd htdocs/custom
+   git clone <dépôt> mmiprestasync
+   ```
 
-Note: If this screen tell you there is no custom directory, check your setup is correct:
+2. Dans Dolibarr : **Configuration → Modules**, activer d'abord `mmicommon`, puis ce module.
+3. Vérifier les permissions dans la fiche des utilisateurs concernés.
 
-- In your Dolibarr installation directory, edit the ```htdocs/conf/conf.php``` file and check that following lines are not commented:
+## Licence
 
-    ```php
-    //$dolibarr_main_url_root_alt ...
-    //$dolibarr_main_document_root_alt ...
-    ```
+GPLv3 ou ultérieure — voir `COPYING`. Documentation sous GFDL.
 
-- Uncomment them if necessary (delete the leading ```//```) and assign a sensible value according to your Dolibarr installation
+## Changelog
 
-    For example :
-
-    - UNIX:
-        ```php
-        $dolibarr_main_url_root_alt = '/custom';
-        $dolibarr_main_document_root_alt = '/var/www/Dolibarr/htdocs/custom';
-        ```
-
-    - Windows:
-        ```php
-        $dolibarr_main_url_root_alt = '/custom';
-        $dolibarr_main_document_root_alt = 'C:/My Web Sites/Dolibarr/htdocs/custom';
-        ```
-
-### From a GIT repository
-
-- Clone the repository in ```$dolibarr_main_document_root_alt/mmiprestasync```
-
-```sh
-cd ....../custom
-git clone git@github.com:gitlogin/mmiprestasync.git mmiprestasync
-```
-
-### <a name="final_steps"></a>Final steps
-
-From your browser:
-
-  - Log into Dolibarr as a super-administrator
-  - Go to "Setup" -> "Modules"
-  - You should now be able to find and enable the module
-
--->
-
-## Licenses
-
-### Main code
-
-GPLv3 or (at your option) any later version. See file COPYING for more information.
-
-### Documentation
-
-All texts and readmes are licensed under GFDL.
+Voir [CHANGELOG.md](CHANGELOG.md) (évolutions datées).
