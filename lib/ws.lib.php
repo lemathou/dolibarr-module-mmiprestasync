@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of iProspective & Mathieu Moulin
 */
 
+// Necessaire pour l acces DB et pour dechiffrer les constantes sensibles (dolcrypt).
+require_once __DIR__.'/../../../conf/conf.php';
+
 define('DEBUG_SYNCHRO', false);
 define('DEBUG_SQL', false);
 
@@ -138,6 +141,18 @@ public function authenticate()
 		$q = static::$_db->query($sql);
 		if ($q && ($r = $q->fetch_row())) {
 			$expected = (string) $r[0];
+		}
+	}
+
+	// Dolibarr chiffre les constantes sensibles (prefixe dolcrypt:). On dechiffre
+	// avec la cle de l instance, comme le fait dolDecrypt().
+	if ($expected !== '' && strpos($expected, 'dolcrypt:') === 0) {
+		$key = !empty($GLOBALS['dolibarr_main_dolcrypt_key']) ? $GLOBALS['dolibarr_main_dolcrypt_key'] : (!empty($GLOBALS['dolibarr_main_instance_unique_id']) ? $GLOBALS['dolibarr_main_instance_unique_id'] : '');
+		if ($key !== '' && preg_match('/^dolcrypt:([^:]+):([^:]+):(.+)$/', $expected, $reg)) {
+			$decrypted = openssl_decrypt($reg[3], $reg[1], $key, 0, $reg[2]);
+			if ($decrypted !== false) {
+				$expected = $decrypted;
+			}
 		}
 	}
 
@@ -521,13 +536,11 @@ protected static $_params = [];
 // Dolibarr
 public static function _parameters()
 {
-	require_once '../../conf/conf.php';
-
 	return [
-		'db_host' => $dolibarr_main_db_host,
-		'db_user' => $dolibarr_main_db_user,
-		'db_password' => $dolibarr_main_db_pass,
-		'db_name' => $dolibarr_main_db_name,
+		'db_host' => $GLOBALS['dolibarr_main_db_host'],
+		'db_user' => $GLOBALS['dolibarr_main_db_user'],
+		'db_password' => $GLOBALS['dolibarr_main_db_pass'],
+		'db_name' => $GLOBALS['dolibarr_main_db_name'],
 	];
 }
 
